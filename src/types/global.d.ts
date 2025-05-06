@@ -12,7 +12,8 @@ declare global {
     id: number
     title: string
     tags: string[]
-    createdAt: Data
+    createdAt: Date
+    coverUrl?: string
   }
   export interface ArticleContent {
     title: string
@@ -21,4 +22,4 @@ declare global {
 }
 
 // 确保模块化环境下的类型安全
-export {}
+export { global }

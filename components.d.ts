@@ -10,7 +10,12 @@ declare module 'vue' {
   export interface GlobalComponents {
     AritcleCard: typeof import('./src/components/AritcleCard.vue')['default']
     ArticleCard: typeof import('./src/components/ArticleCard.vue')['default']
+    BubbleSort: typeof import('./src/components/algorithm/bubble-sort.vue')['default']
+    LeftSection: typeof import('./src/components/algorithm/LeftSection.vue')['default']
+    QuickSort: typeof import('./src/components/algorithm/quick-sort.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SortingVisualizer: typeof import('./src/components/SortingVisualizer.vue')['default']
+    VisualizationContainer: typeof import('./src/components/algorithm/VisualizationContainer.vue')['default']
   }
 }

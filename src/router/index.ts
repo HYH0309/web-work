@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordRaw,
+  type RouteLocationNormalized,
+} from 'vue-router'
 // 2. 配置路由
 const routes: Array<RouteRecordRaw> = [
   //首页
@@ -9,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   //文章
   {
     path: '/article',
-    component: () => import('../views/ArticleListView.vue.vue'),
+    component: () => import('../views/ArticleListView.vue'),
     children: [
       {
         path: '/:id',
@@ -17,10 +22,31 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-  //算法可视化
+  // 算法可视化列表
   {
-    path: '/algorithm',
+    path: '/algorithm-list',
     component: () => import('../views/AlgorithmListView.vue'),
+  },
+  // 算法可视化展示
+  {
+    path: '/algorithm/:algoName(bubble|quick|merge)',
+    name: 'algorithm',
+    component: () => import('../views/AlgorithmView.vue'),
+    props: (route: RouteLocationNormalized) => ({
+      algorithm: route.params.algoName,
+      defaultSpeed: 1,
+      enableFullscreen: true,
+    }),
+  },
+  {
+    path: '/algorithm/:category(bs|graph|mst)',
+    name: 'legacyAlgorithm',
+    component: () => import('../views/AlgorithmView.vue'),
+    props: (route: RouteLocationNormalized) => ({
+      algorithmType: route.params.category,
+      defaultSpeed: 3,
+      enableFullscreen: true,
+    }),
   },
   {
     path: '/aichat',
