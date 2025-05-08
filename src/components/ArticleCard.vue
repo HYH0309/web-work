@@ -25,7 +25,7 @@ defineProps<{
         <!-- 元信息 -->
         <div class="flex items-center gap-2 text-sm text-gray-600 truncate">
           <CalendarIcon class="w-4 h-4 flex-shrink-0" />
-          <time :datetime="article.createdAt">
+          <time :datetime="article.createdAt.toTimeString">
             {{ new Date(article.createdAt).toLocaleDateString('zh-CN', {
               year: 'numeric', month: 'long', day: 'numeric'
             }) }}

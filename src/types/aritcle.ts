@@ -22,4 +22,4 @@ declare global {
 }
 
 // 确保模块化环境下的类型安全
-export { global }
+export type { Result, Article, ArticleContent }
