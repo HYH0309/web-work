@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { PercentBadgeIcon } from '@heroicons/vue/24/outline'
-import ArticleCard from '@/components/ArticleCard.vue'
+import ArticleCard from '@/components/blog/ArticleCard.vue'
+import type { ArticleSummary } from '@/types/article'
 
 // 虚拟数据生成
-const generateMockData = (count = 50): Article[] => {
+const generateMockData = (count = 50): ArticleSummary[] => {
   const tagsPool = ['前端', 'Vue', '算法', 'TypeScript', '工程化', 'Node.js']
   return Array.from({ length: count }, (_, i) => ({
     id: i + 1,
@@ -16,11 +16,19 @@ const generateMockData = (count = 50): Article[] => {
   }))
 }
 
-const allArticles = ref(generateMockData(50))
+const allArticles = ref<ArticleSummary[]>([])
 const searchTitle = ref('')
 const selectedTags = ref<string[]>([])
 const currentPage = ref(1)
 const pageSize = 9
+const isLoading = ref(true)
+const isEmpty = computed(() => filteredArticles.value.length === 0)
+
+// 模拟数据加载
+setTimeout(() => {
+  isLoading.value = false
+  allArticles.value = generateMockData(50)
+}, 1000)
 
 const availableTags = computed(() => {
   return Array.from(new Set(allArticles.value.flatMap(article => article.tags)))
@@ -46,31 +54,27 @@ const handlePageChange = (page: number) => {
   currentPage.value = page
 }
 
-const toggleTag = (tag: string) => {
-  selectedTags.value = selectedTags.value.includes(tag)
-    ? selectedTags.value.filter(t => t !== tag)
-    : [...selectedTags.value, tag]
-}
-
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50 p-6 w-screen max-w-7xl mx-auto">
-    <!-- 简化筛选区 -->
-    <div class="filter-container">
-      <input v-model="searchTitle" class="search-input" placeholder="搜索文章标题..." />
-      <div class="filter-tags">
-        <PercentBadgeIcon class="tag-icon" />
-        <span class="filter-label">筛选标签：</span>
-        <button v-for="tag in availableTags" :key="tag" @click="toggleTag(tag)"
-          :class="['tag-btn', { 'tag-btn-active': selectedTags.includes(tag) }]">
-          {{ tag }}
-        </button>
-      </div>
+    <!-- 筛选组件 -->
+    <ArticleFilter :available-tags="availableTags" :initial-search-title="searchTitle"
+      :initial-selected-tags="selectedTags" @update:search-title="(val: string) => searchTitle = val"
+      @update:selected-tags="(val: string[]) => selectedTags = val" />
+
+    <!-- 状态显示 -->
+    <div v-if="isLoading" class="text-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
+      <p class="mt-4 text-gray-600">正在加载文章...</p>
+    </div>
+
+    <div v-else-if="isEmpty" class="text-center py-12">
+      <p class="text-gray-500">没有找到符合条件的文章</p>
     </div>
 
     <!-- 网格布局 -->
-    <div class="article-grid">
+    <div v-else class="article-grid">
       <ArticleCard v-for="article in paginatedArticles" :key="article.id" :article="article" class="article-card" />
     </div>
 

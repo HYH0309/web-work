@@ -1,29 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from '@headlessui/vue'
+import { ref, computed } from 'vue'
+import OJFilterPanel from '@/components/oj/OJFilterPanel.vue'
+import OJProblemCard from '@/components/oj/OJProblemCard.vue'
 
-const people = [
-  { id: 1, name: 'Durward Reynolds', unavailable: false },
-  { id: 2, name: 'Kenton Towne', unavailable: false },
-  { id: 3, name: 'Therese Wunsch', unavailable: false },
-  { id: 4, name: 'Benedict Kessler', unavailable: true },
-  { id: 5, name: 'Katelyn Rohan', unavailable: false },
+const isLoading = ref(false)
+const searchQuery = ref('')
+
+interface Problem {
+  title: string
+  difficulty: 'easy' | 'medium' | 'hard'
+}
+
+const problems: Problem[] = [
+  { title: '两数之和', difficulty: 'easy' },
+  { title: '无重复字符的最长子串', difficulty: 'medium' },
+  { title: '寻找两个正序数组的中位数', difficulty: 'hard' },
+  { title: '最长回文子串', difficulty: 'medium' },
+  { title: '盛最多水的容器', difficulty: 'medium' }
 ]
-const selectedPerson = ref(people[0])
+
+const filteredProblems = computed(() => {
+  return problems.filter(p =>
+    p.title.includes(searchQuery.value) ||
+    p.difficulty.includes(searchQuery.value as 'easy' | 'medium' | 'hard')
+  )
+})
 </script>
+
 <template>
-  <Listbox v-model="selectedPerson">
-    <ListboxButton>{{ selectedPerson.name }}</ListboxButton>
-    <ListboxOptions>
-      <ListboxOption v-for="person in people" :key="person.id" :value="person" :disabled="person.unavailable">
-        {{ person.name }}
-      </ListboxOption>
-    </ListboxOptions>
-  </Listbox>
+  <div class="container mx-auto p-4 max-w-4xl">
+    <OJFilterPanel v-model="searchQuery" />
+
+    <div v-if="isLoading" class="flex justify-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+    </div>
+
+    <div v-else class="space-y-3">
+      <OJProblemCard v-for="problem in filteredProblems" :key="problem.title" :title="problem.title"
+        :difficulty="problem.difficulty" />
+    </div>
+  </div>
 </template>
-<style scope></style>

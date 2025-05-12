@@ -1,4 +1,7 @@
 import 'virtual:uno.css'
+import './assets/main.css'
+import './assets/prism.css'
+import 'github-markdown-css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import router from './router'
