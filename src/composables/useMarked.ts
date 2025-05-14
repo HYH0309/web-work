@@ -9,18 +9,16 @@ import anchor from 'markdown-it-anchor' // 标题锚点生成
 // ========================
 // 功能扩展插件：增强 Markdown 功能
 // ========================
+import hljsMarkdown from 'markdown-it-highlightjs'
 import mermaidItMarkdown from 'mermaid-it-markdown' // Mermaid 图表支持
 import { full as emojiPlugin } from 'markdown-it-emoji' // Emoji 短码转换
-import prism from 'markdown-it-prism' // 代码块语法高亮
 import { plantuml } from '@mdit/plugin-plantuml' // PlantUML 支持
-import Prism from 'prismjs'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-typescript'
+import markdownCopy from 'markdown-it-code-copy'
 
 // ========================
 // 数学公式支持
 // ========================
-import { katex } from '@mdit/plugin-katex' // LaTeX 公式渲染
+import { katex } from '@mdit/plugin-katex'
 
 // ========================
 // 配置常量（按功能模块分类）
@@ -32,6 +30,7 @@ const MARKDOWN_IT_CONFIG = {
     linkify: true, // 自动转换 URL 为链接
     typographer: true, // 启用印刷字体替换（如引号转换）
     async: false,
+    langPrefix: 'language-', // 代码块的语言类前缀
     replacements: [
       // 特殊字符保护（针对数学公式场景）
       { from: '\\$', to: '$' }, // 保护美元符号不被转换
@@ -44,36 +43,55 @@ const MARKDOWN_IT_CONFIG = {
   /** 目录生成配置 */
   toc: {
     containerClass: 'toc',
-    markerPattern: /\[\[toc\]\]/i, // 新增匹配模式
-    // 增强回调函数处理
   },
 
   /** 标题锚点配置 */
-  anchor: {
-    permalink: true, // 显示永久链接图标
-    permalinkBefore: true, // 图标显示在标题前
-    permalinkSymbol: '📍', // 自定义链接图标
-    // 标题 slug 生成规则（URL 友好格式）
-    slugify: (s: string) =>
-      String(s)
-        .trim()
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '') // 移除非法字符
-        .replace(/[\s_-]+/g, '-'), // 空格/下划线转连字符
-  },
+  anchor: { symbol: '#' },
 
   /** KaTeX 数学公式配置 */
   katex: {
-    throwOnError: false, // 不抛出解析错误
-    mathFence: true, // 默认围栏语法
+    throwOnError: false,
+    mathFence: true, // 启用块级公式
+    inlineMath: [
+      // 显式声明行内公式语法
+      ['$', '$'],
+      ['\\(', '\\)'],
+    ],
+    displayMath: [
+      // 显式声明块级公式语法
+      ['$$', '$$'],
+      ['\\[', '\\]'],
+    ],
   },
-
-  /** 语法高亮配置 */
-  prism: {
-    highlightInlineCode: true, // 高亮行内代码
-    init: () => {
-      Prism.plugins.autoloader.enable = false
+  CodeCopy: {
+    onSuccess: () => {
+      alert('复制失败')
     },
+    onError: () => {
+      alert('复制失败')
+    },
+    element: 'copy', // 文本型按钮
+    buttonStyle: `
+      position: absolute;
+      top: 7.5px;
+      right: 6px;
+      cursor: pointer;
+      outline: none;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+      font-size: 12px;
+      font-weight: 500;
+      color: #333;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(2px);
+    `,
+    iconStyle: `
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    `,
   },
 }
 
@@ -98,7 +116,8 @@ const createMarkdownParser = () => {
     { name: 'toc', plugin: tocPlugin, config: MARKDOWN_IT_CONFIG.toc },
 
     // 代码高亮类（后处理常规代码块）
-    { name: 'prism', plugin: prism },
+    { name: 'markdown-it-code-copy', plugin: markdownCopy, config: MARKDOWN_IT_CONFIG.CodeCopy },
+    { name: 'hljs', plugin: hljsMarkdown },
 
     // 其他文本处理插件
     { name: 'emoji', plugin: emojiPlugin },

@@ -17,23 +17,23 @@ const metrics = computed(() => [
     label: '访问节点',
     value: animatedValues.value.visitedNodes,
     icon: MapPinIcon,
-    color: 'text-primary-500'
+    color: 'primary'
   },
   {
     id: 'path',
     label: '路径长度',
     value: animatedValues.value.pathLength,
     icon: ArrowPathIcon,
-    color: 'text-success-500'
+    color: 'success'
   },
   {
     id: 'max',
     label: '最大存储',
     value: animatedValues.value.maxNode,
     icon: DocumentTextIcon,
-    color: 'text-gray-700'
+    color: 'gray'
   },
-])
+] as Array<metric>)
 
 const description = computed(() => store.state.description)
 
@@ -47,18 +47,13 @@ watch(() => store.state.stats, (newVal) => {
 </script>
 
 <template>
-  <section class="stats-container">
+  <section class="space-y-3">
     <div class="metrics-grid">
       <BaseMetricCard v-for="metric in metrics" :key="metric.id" :metric="metric" />
     </div>
-    <div class="description-box">
+
+    <div class="description-box ">
       {{ description }}
     </div>
   </section>
 </template>
-
-<style scoped>
-.card-base {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300;
-}
-</style>

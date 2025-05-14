@@ -6,17 +6,16 @@ const store = useSearchStore()
 
 const cellClass = (cell: string) => {
   switch (cell) {
-    case 'start': return 'bg-green-500'
-    case 'end': return 'bg-red-500'
-    case 'wall': return 'bg-gray-800'
-    case 'visited': return 'bg-blue-400'
-    case 'path': return 'bg-yellow-400'
-    default: return 'bg-purple'
+    case 'start': return 'start-state'
+    case 'end': return 'pivot-state'
+    case 'wall': return 'wall-state'
+    case 'visited': return 'active-state'
+    case 'path': return 'path-state'
+    default: return 'bg-card'
   }
 }
 
 const handleCellClick = (row: number, col: number) => {
-  // Toggle between empty and wall
   if (store.state.grid[row][col] === 'empty') {
     store.state.grid[row][col] = 'wall'
   } else if (store.state.grid[row][col] === 'wall') {
@@ -27,11 +26,9 @@ const handleCellClick = (row: number, col: number) => {
 
 <template>
   <div class="grid-container">
-    <div v-for="(row, i) in store.state.grid" :key="i" class="grid-row">
+    <div v-for="(row, i) in store.state.grid" :key="i" class="grid-row w-10">
       <motion.div v-for="(cell, j) in row" :key="`${i}-${j}-${cell}`" :class="['grid-cell', cellClass(cell)]"
-        @click="handleCellClick(i, j)" :animate="{
-          scale: [1, 1.1, 1],
-        }" />
+        @click="handleCellClick(i, j)" :animate="{ scale: [1, 1.1, 1] }" :transition="{ duration: 0.3 }" />
     </div>
   </div>
 </template>
@@ -46,6 +43,28 @@ const handleCellClick = (row: number, col: number) => {
 }
 
 .grid-cell {
-  @apply w-11 h-11 border border-gray-300 rounded-sm cursor-pointer rounded-sm;
+  @apply w-10 h-10 border-border border rounded-sm cursor-pointer theme-transition;
+  box-shadow: var(--un-shadow-inset);
+}
+
+/* 状态色使用快捷方式 */
+.pivot-state {
+  @apply state-primary;
+}
+
+.active-state {
+  @apply state-primary/80;
+}
+
+.path-state {
+  @apply state-warning;
+}
+
+.start-state {
+  @apply state-success;
+}
+
+.wall-state {
+  @apply state-muted;
 }
 </style>

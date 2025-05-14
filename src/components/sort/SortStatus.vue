@@ -19,7 +19,7 @@ const metrics = computed(() => {
       label: '比较次数',
       value: animatedValues.value.comparisons,
       icon: ChartBarIcon,
-      color: 'text-primary-500',
+      color: 'primary',
       visible: true
     },
     {
@@ -27,7 +27,7 @@ const metrics = computed(() => {
       label: '交换次数',
       value: animatedValues.value.swaps,
       icon: ArrowsUpDownIcon,
-      color: 'text-success-500',
+      color: 'success',
       visible: true
     },
     {
@@ -35,7 +35,7 @@ const metrics = computed(() => {
       label: '递归深度',
       value: animatedValues.value.recursionDepth,
       icon: CpuChipIcon,
-      color: 'text-gray-700',
+      color: 'warning',
       visible: !!store.state.stats.recursionDepth
     },
     {
@@ -43,10 +43,10 @@ const metrics = computed(() => {
       label: '当前间隔',
       value: animatedValues.value.currentGap,
       icon: CpuChipIcon,
-      color: 'text-blue-500',
+      color: 'info',
       visible: !!store.state.stats.currentGap
     }
-  ]
+  ] as Array<metric>
 
   return items.filter(item => item.visible)
 })
@@ -64,24 +64,33 @@ watch(() => store.state.stats, (newVal) => {
 </script>
 
 <template>
-  <section class="stats-container">
+  <section class="space-y-3">
     <div class="metrics-grid">
       <BaseMetricCard v-for="metric in metrics" :key="metric.id" :metric="metric" />
     </div>
 
     <!-- 空状态提示 -->
-    <div v-if="metrics.length === 0" class="card-base p-4 text-gray-500 text-center">
+    <div v-if="metrics.length === 0" class="card-base p-4 text-text-muted text-center theme-transition">
       暂无可用统计指标
     </div>
 
-    <div class="description-box">
+    <div v-if="description" class="description-box theme-transition">
       {{ description }}
     </div>
   </section>
 </template>
 
 <style scoped>
+.metrics-grid {
+  @apply grid grid-cols-2 md:grid-cols-4 gap-3;
+}
+
+.description-box {
+  @apply p-4 bg-card rounded-lg border-border border text-text-muted;
+}
+
+/* 空状态卡片扩展样式 */
 .card-base {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300;
+  @apply bg-card rounded-lg border-border border p-4;
 }
 </style>

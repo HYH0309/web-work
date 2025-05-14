@@ -1,28 +1,25 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 
 defineProps<{
-  metric: {
-    icon: Component
-    color: string
-    label: string
-    value: string | number
-  }
+  metric: metric
 }>()
 </script>
 
 <template>
-  <div class="metric-card">
-    <component :is="metric.icon" class="metric-icon" :class="metric.color" />
+  <div class="metric-card theme-transition">
+    <component :is="metric.icon" class="metric-icon" :class="`text-${metric.color}-500`" />
     <div class="metric-content">
-      <span class="metric-label">{{ metric.label }}:{{ ' ' }}</span>
-      <span class="metric-value" :class="metric.color"> {{ metric.value }}</span>
+      <span class="metric-label text-text-muted">{{ metric.label }}:</span>
+      <span class="metric-value" :class="`text-${metric.color}-600`">
+        {{ metric.value }}
+      </span>
     </div>
   </div>
 </template>
+
 <style scoped>
 .metric-card {
-  @apply card-base flex items-center p-3 rounded-xl transition hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply card-base flex items-center p-3 rounded-xl hover:bg-background-muted;
 }
 
 .metric-icon {
@@ -30,14 +27,14 @@ defineProps<{
 }
 
 .metric-content {
-  @apply min-w-0 space-y-1
+  @apply min-w-0 space-y-1;
 }
 
 .metric-label {
-  @apply text-sm text-gray-600 dark: text-gray-400 truncate;
+  @apply text-sm truncate font-medium;
 }
 
 .metric-value {
-  @apply text-base font-semibold truncate
+  @apply font-semibold truncate text-lg;
 }
 </style>

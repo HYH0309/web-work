@@ -11,16 +11,8 @@ function updateValue(e: Event) {
 </script>
 
 <template>
-  <div class="mb-6">
-    <div class="relative">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-      <input :value="modelValue" @input="updateValue" type="text" placeholder="搜索题目..."
-        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
-    </div>
+  <div class="relative mb-10 w-full">
+    <input :value="modelValue" @input="updateValue" type="text" placeholder="搜索题目..."
+      class="block w-lg pl-10 pr-3 py-2 border  border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mx-auto" />
   </div>
 </template>

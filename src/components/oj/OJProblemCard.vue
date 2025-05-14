@@ -1,5 +1,6 @@
 <script setup lang="ts">
 defineProps<{
+  id: number,
   title: string
   difficulty: 'easy' | 'medium' | 'hard'
 }>()
@@ -12,12 +13,14 @@ const difficultyColors = {
 </script>
 
 <template>
-  <div class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-all cursor-pointer">
-    <div class="flex items-center justify-between">
-      <h3 class="text-lg font-medium text-gray-900">{{ title }}</h3>
-      <span class="px-2 py-1 text-xs rounded-full font-medium" :class="difficultyColors[difficulty]">
-        {{ difficulty === 'easy' ? '简单' : difficulty === 'medium' ? '中等' : '困难' }}
-      </span>
+  <RouterLink :to="`/oj/${id}`" class="no-underline">
+    <div class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-all cursor-pointer m-10">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-medium text-gray-900">{{ title }}</h3>
+        <span class="px-2 py-1 text-xs rounded-full font-medium" :class="difficultyColors[difficulty]">
+          {{ difficulty === 'easy' ? '简单' : difficulty === 'medium' ? '中等' : '困难' }}
+        </span>
+      </div>
     </div>
-  </div>
+  </RouterLink>
 </template>

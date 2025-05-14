@@ -37,7 +37,7 @@ const filteredProblems = computed(() => {
 
     <div v-else class="space-y-3">
       <OJProblemCard v-for="problem in filteredProblems" :key="problem.title" :title="problem.title"
-        :difficulty="problem.difficulty" />
+        :difficulty="problem.difficulty" :id="1" />
     </div>
   </div>
 </template>

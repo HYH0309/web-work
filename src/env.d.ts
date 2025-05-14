@@ -1,14 +1,6 @@
 /// <reference types="vite/client" />
 
-declare module '@monaco-editor/vue3' {
-  import type { DefineComponent } from 'vue'
-  export const loader: {
-    config: (options: { monaco: unknown; paths: { vs: string } }) => void
-  }
-  const component: DefineComponent<Record<string, never>, Record<string, never>, unknown>
-  export default component
-}
-
+declare module 'markdown-it-katex'
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
   const component: DefineComponent<object, object, unknown>
@@ -20,3 +12,4 @@ declare module '*.md' {
   const Component: ComponentOptions
   export default Component
 }
+declare module 'markdown-it-code-copy'

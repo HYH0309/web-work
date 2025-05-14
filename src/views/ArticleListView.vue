@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import ArticleCard from '@/components/blog/ArticleCard.vue'
+import ArticleCard from '@/components/article/ArticleCard.vue'
+import ArticleFilter from '@/components/article/ArticleFilter.vue'
 import type { ArticleSummary } from '@/types/article'
 
 // 虚拟数据生成
@@ -20,7 +21,7 @@ const allArticles = ref<ArticleSummary[]>([])
 const searchTitle = ref('')
 const selectedTags = ref<string[]>([])
 const currentPage = ref(1)
-const pageSize = 9
+const pageSize = 6
 const isLoading = ref(true)
 const isEmpty = computed(() => filteredArticles.value.length === 0)
 
@@ -57,31 +58,35 @@ const handlePageChange = (page: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 p-6 w-screen max-w-7xl mx-auto">
+  <div class="container bg-background mx-auto">
     <!-- 筛选组件 -->
     <ArticleFilter :available-tags="availableTags" :initial-search-title="searchTitle"
       :initial-selected-tags="selectedTags" @update:search-title="(val: string) => searchTitle = val"
       @update:selected-tags="(val: string[]) => selectedTags = val" />
 
+    <div class="divider"></div>
+
     <!-- 状态显示 -->
-    <div v-if="isLoading" class="text-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
-      <p class="mt-4 text-gray-600">正在加载文章...</p>
+    <div v-if="isLoading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p class="mt-4 text-text-muted">正在加载文章...</p>
     </div>
 
     <div v-else-if="isEmpty" class="text-center py-12">
-      <p class="text-gray-500">没有找到符合条件的文章</p>
+      <p class="text-text-muted">没有找到符合条件的文章</p>
     </div>
 
-    <!-- 网格布局 -->
+    <!-- 文章网格 -->
     <div v-else class="article-grid">
-      <ArticleCard v-for="article in paginatedArticles" :key="article.id" :article="article" class="article-card" />
+      <ArticleCard v-for="article in paginatedArticles" :key="article.id" :article="article" />
     </div>
+
+    <div class="border-b border-border my-6"></div>
 
     <!-- 分页 -->
-    <div class="pagination">
+    <div class="mt-6 flex-center gap-2">
       <button v-for="page in totalPages" :key="page" @click="handlePageChange(page)"
-        :class="['pagination-btn', { 'active': page === currentPage }]">
+        :class="['btn-sm border-none', { 'bg-success': page === currentPage }]">
         {{ page }}
       </button>
     </div>
@@ -89,57 +94,14 @@ const handlePageChange = (page: number) => {
 </template>
 
 <style scoped>
-.filter-container {
-  @apply mb-8 backdrop-blur-sm bg-white/50 rounded-xl p-6 shadow-sm border border-gray-100;
-}
-
-.search-input {
-  @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition-all duration-300 placeholder-gray-400;
-}
-
-.filter-tags {
-  @apply mt-4 flex flex-wrap gap-2 items-center;
-}
-
-.tag-icon {
-  @apply w-5 h-5;
-}
-
-.filter-label {
-  @apply text-sm font-medium text-slate-500;
-}
-
-.tag-btn {
-  @apply px-3.5 py-1 rounded-full transition-all duration-200;
-}
-
-.tag-btn-active {
-  @apply bg-indigo-100/80 text-indigo-600 border border-indigo-300/50 hover:bg-indigo-200/60;
-}
-
-.tag-btn:not(.tag-btn-active) {
-  @apply bg-slate-50 text-slate-500 hover:bg-white hover:shadow-xs hover:border-indigo-100 hover:text-indigo-600;
+.loading-spinner {
+  @apply animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto;
 }
 
 .article-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
 }
 
-.article-card {
-  @apply transform transition-all duration-300 hover:scale-[1.02] rounded-xl shadow-sm hover:shadow-md;
-}
-
-.pagination {
-  @apply mt-12 flex justify-center gap-2;
-}
-
-.pagination-btn {
-  @apply px-4 py-2 rounded-lg border font-medium transition-colors duration-200 bg-white text-slate-600 border-gray-200 hover:bg-gray-50;
-}
-
-.pagination-btn.active {
-  @apply bg-indigo-500 text-white border-indigo-600 hover:bg-indigo-600;
-}
 
 @media (max-width: 640px) {
   .pagination {

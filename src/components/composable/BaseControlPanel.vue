@@ -1,13 +1,13 @@
 <template>
-  <div class="bg-white rounded-lg shadow-sm p-5 transition-300" :class="[
+  <div class="card-container" :class="[
     direction === 'horizontal' ? 'md:flex-row' : 'flex-col',
-    disabled ? 'opacity-50 pointer-events-none' : '',
+    disabled ? 'card-disabled' : '',
     'flex gap-4'
   ]">
-    <div class="flex-1 flex flex-wrap gap-2">
+    <div class="content-area">
       <slot></slot>
     </div>
-    <div class="flex gap-2 items-center">
+    <div class="action-area">
       <slot name="actions"></slot>
     </div>
   </div>
@@ -19,3 +19,21 @@ defineProps<{
   disabled?: boolean
 }>()
 </script>
+
+<style scoped>
+.card-container {
+  @apply card-base flex-layout;
+}
+
+.content-area {
+  @apply flex-1 flex flex-wrap gap-2;
+}
+
+.action-area {
+  @apply flex gap-2 items-center text-text-muted;
+}
+
+.card-disabled {
+  @apply card-disabled;
+}
+</style>

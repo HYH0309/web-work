@@ -13,16 +13,12 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/article/:id',
-    component: () => import('@/components/blog/ArticleShow.vue'),
+    component: () => import('@/views/ArticleView.vue'),
   },
   // 算法可视化列表
   {
     path: '/visualizer',
     component: () => import('@/views/VisualizerView.vue'),
-  },
-  {
-    path: '/aichat',
-    component: () => import('@/views/AIChatView.vue'),
   },
   {
     path: '/oj-list',

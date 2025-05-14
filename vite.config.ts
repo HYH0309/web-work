@@ -6,10 +6,11 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import Markdown from 'unplugin-vue-markdown/vite'
 import Components from 'unplugin-vue-components/vite'
 import MotionResolver from 'motion-v/resolver'
-import prism from 'markdown-it-prism'
 import { katex } from '@mdit/plugin-katex'
 import table from 'markdown-it-multimd-table'
-import { tab } from '@mdit/plugin-tab'
+import mermaidItMarkdown from 'mermaid-it-markdown' // Mermaid 图表支持
+import hljsMarkdown from 'markdown-it-highlightjs'
+
 export default defineConfig({
   plugins: [
     vue({
@@ -18,7 +19,9 @@ export default defineConfig({
         defineModel: true,
       },
     }),
-    UnoCSS(),
+    UnoCSS({
+      mode: 'dist-chunk', // 按模块分块CSS
+    }),
     Components({
       dts: true,
       resolvers: [MotionResolver()],
@@ -29,13 +32,12 @@ export default defineConfig({
         html: true,
         linkify: true,
         typographer: true,
+        langPrefix: 'language-', // 代码块的语言类前缀
       },
       markdownItSetup(md) {
-        md.use(prism).use(katex).use(table).use(tab, {
-          name: 'tabs',
-        })
+        md.use(hljsMarkdown).use(katex).use(table).use(mermaidItMarkdown)
       },
-      wrapperClasses: 'markdown-body prose max-w-none',
+      wrapperClasses: 'markdown-body',
     }),
     vueDevTools(),
   ],
@@ -44,7 +46,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          monaco: ['monaco-editor'],
           katex: ['katex'],
           mermaid: ['mermaid'],
         },

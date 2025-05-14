@@ -41,23 +41,24 @@ const selectedTab = ref(tabs[0])
 </script>
 
 <template>
-  <div class="container mx-auto max-w-7xl px-4  flex flex-col gap-1 ">
+  <div class="container">
     <nav class="nav">
-      <div class="flex justify-between items-center">
+      <div class="nav-container">
         <ul class="tabs-container">
           <motion.li v-for="tab in tabs" :key="tab.id" class="tab" :class="{ 'active': selectedTab.id === tab.id }"
             @click="selectedTab = tab">
             <component :is="selectedTab.id === tab.id ? tab.activeIcon : tab.icon" class="icon" />
-            <span class="hidden sm:inline">{{ tab.label }}</span>
+            <span class="label">{{ tab.label }}</span>
             <motion.div v-if="selectedTab.id === tab.id" class="underline" layout-id="underline" />
           </motion.li>
         </ul>
         <button class="action-btn">
-          <span class="hidden sm:inline">重置动画</span>
-          <span class="sm:hidden">↻</span>
+          <span class="action-text">重置动画</span>
+          <span class="action-icon">↻</span>
         </button>
       </div>
     </nav>
+
     <main>
       <AnimatePresence mode="wait">
         <motion.div :key="selectedTab.id" :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }"
@@ -70,8 +71,16 @@ const selectedTab = ref(tabs[0])
 </template>
 
 <style scoped>
+.container {
+  @apply mx-auto max-w-7xl px-4 flex flex-col gap-4;
+}
+
 .nav {
-  @apply bg-white dark:bg-dark-700 rounded-xl shadow-sm p-4;
+  @apply rounded-xl shadow-card p-4 bg-card;
+}
+
+.nav-container {
+  @apply flex justify-between items-center;
 }
 
 .tabs-container {
@@ -79,10 +88,10 @@ const selectedTab = ref(tabs[0])
 }
 
 .tab {
-  @apply relative flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium cursor-pointer text-gray-500 hover:bg-gray-100/60 dark:text-gray-400 dark:hover:bg-dark-600/60;
+  @apply relative flex items-center gap-2 px-4 py-2.5 rounded-lg theme-transition text-sm font-medium cursor-pointer text-text-muted hover:bg-background-muted;
 
   &.active {
-    @apply text-blue-600 dark:text-blue-400;
+    @apply text-primary;
   }
 }
 
@@ -91,10 +100,22 @@ const selectedTab = ref(tabs[0])
 }
 
 .underline {
-  @apply absolute -bottom-3 left-0 w-full h-1 bg-blue-500 dark:bg-blue-400;
+  @apply absolute -bottom-3 left-0 w-full h-1 bg-primary;
+}
+
+.label {
+  @apply hidden sm:inline;
 }
 
 .action-btn {
-  @apply px-4 py-2 ml-2 text-sm font-medium rounded-lg transition-colors bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-dark-600 dark:text-blue-400 dark:hover:bg-dark-500;
+  @apply px-4 py-2 ml-2 text-sm font-medium rounded-lg theme-transition bg-primary/10 text-primary hover:bg-primary/20;
+}
+
+.action-text {
+  @apply hidden sm:inline;
+}
+
+.action-icon {
+  @apply sm:hidden;
 }
 </style>

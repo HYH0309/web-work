@@ -23,22 +23,68 @@ const closeModal = () => {
 
 <template>
   <TransitionRoot appear :show="show" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-50">
-      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-        leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-black/25 backdrop-blur-sm"></div>
+    <Dialog as="div" @close="closeModal" class="relative z-modal">
+      <TransitionChild as="template" enter="theme-transition-opacity" leave="theme-transition-opacity">
+        <div class="fixed inset-0 bg-overlay/80 backdrop-blur-sm" />
       </TransitionChild>
 
       <div class="fixed inset-0 flex items-center justify-center p-4">
-        <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-          enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-          leave-to="opacity-0 scale-95">
-          <DialogPanel
-            class="w-full max-w-3xl max-h-[80vh] rounded-xl bg-white dark:bg-gray-800 p-6 shadow-xl overflow-y-auto">
-            <slot></slot>
+        <TransitionChild as="template" enter="theme-transition-transform-opacity"
+          leave="theme-transition-transform-opacity">
+          <DialogPanel class="modal-panel">
+            <div class="text-text">
+              <slot></slot>
+            </div>
           </DialogPanel>
         </TransitionChild>
       </div>
     </Dialog>
   </TransitionRoot>
 </template>
+
+<style scoped>
+.modal-panel {
+  @apply card-base w-full max-w-3xl max-h-[80vh] overflow-y-auto;
+}
+
+/* 在全局样式中定义过渡类 */
+.theme-transition-opacity {
+  @apply transition-opacity duration-300 ease-out;
+
+  &.enter-from {
+    @apply opacity-0;
+  }
+
+  &.enter-to {
+    @apply opacity-100;
+  }
+
+  &.leave-from {
+    @apply opacity-100;
+  }
+
+  &.leave-to {
+    @apply opacity-0;
+  }
+}
+
+.theme-transition-transform-opacity {
+  @apply transition-[opacity, transform] duration-300 ease-out;
+
+  &.enter-from {
+    @apply opacity-0 scale-95;
+  }
+
+  &.enter-to {
+    @apply opacity-100 scale-100;
+  }
+
+  &.leave-from {
+    @apply opacity-100 scale-100;
+  }
+
+  &.leave-to {
+    @apply opacity-0 scale-95;
+  }
+}
+</style>

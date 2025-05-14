@@ -23,23 +23,23 @@ const metrics = computed(() => [
     label: '步骤',
     value: animatedValues.value.currentStep,
     icon: ChartBarIcon,
-    color: 'text-primary-500'
+    color: 'primary'
   },
   {
     id: 'value',
     label: '最大价值',
     value: animatedValues.value.maxValue,
     icon: CurrencyDollarIcon,
-    color: 'text-success-500'
+    color: 'success'
   },
   {
     id: 'capacity',
     label: '剩余容量',
     value: animatedValues.value.remainingCapacity,
     icon: CubeIcon,
-    color: 'text-gray-700'
+    color: 'warning'
   },
-])
+] as Array<metric>)
 
 watch(() => store.state.stats, (newStats) => {
   startAnimation({
@@ -51,7 +51,7 @@ watch(() => store.state.stats, (newStats) => {
 </script>
 
 <template>
-  <section class="stats-container">
+  <section class="space-y-3">
     <div class="metrics-grid">
       <BaseMetricCard v-for="metric in metrics" :key="metric.id" :metric="metric" />
     </div>
@@ -60,11 +60,11 @@ watch(() => store.state.stats, (newStats) => {
       {{ description }}
     </div>
 
-    <div class="items-section">
+    <div class="p-2 rounded-lg bg-panel border-border border theme-transition">
       <div class="items-grid">
-        <div v-for="item in store.state.stats.items" :key="item.id" class="item-card">
-          <span class="item-id">物品 {{ item.id + 1 }}</span>
-          <div class="item-properties">
+        <div v-for="item in store.state.stats.items" :key="item.id" class="item-card theme-transition">
+          <span class="item-id text-primary-500">{{ item.id + 1 }}</span>
+          <div class="item-properties text-text-muted">
             <span>重:{{ item.weight }}</span>
             <span>值:{{ item.value }}</span>
           </div>
@@ -75,16 +75,12 @@ watch(() => store.state.stats, (newStats) => {
 </template>
 
 <style scoped>
-.stats-container {
-  @apply space-y-3;
+.metrics-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-3;
 }
 
-.items-section {
-  @apply p-2 rounded-lg bg-gray-50;
-}
-
-.items-title {
-  @apply text-sm font-medium text-gray-600 mb-2 px-1;
+.description-box {
+  @apply p-4 bg-card rounded-lg border-border border text-text theme-transition;
 }
 
 .items-grid {
@@ -92,14 +88,14 @@ watch(() => store.state.stats, (newStats) => {
 }
 
 .item-card {
-  @apply p-1 text-center text-sm rounded hover:bg-gray-100 transition-colors;
+  @apply p-1 text-center text-sm rounded hover:bg-background-muted cursor-pointer;
 }
 
 .item-id {
-  @apply text-primary-600 font-medium truncate;
+  @apply font-medium truncate block;
 }
 
 .item-properties {
-  @apply text-gray-600 truncate space-x-1;
+  @apply truncate space-x-1 text-xs;
 }
 </style>

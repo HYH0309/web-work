@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="flex justify-between  p-1 bg-gray-100 rounded-lg">
+    <div class="flex justify-between p-1 bg-gray-100/50 rounded-lg">
       <RadioGroup v-model="currentLanguage" class="flex gap-2">
         <RadioGroupOption v-for="lang in languages" :key="lang.value" :value="lang.value" class="language-option"
           :title="lang.label">
@@ -8,7 +8,7 @@
         </RadioGroupOption>
       </RadioGroup>
       <button @click="submitCode"
-        class="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+        class="px-4 py-1 bg-success-500 text-white rounded hover:bg-success-600 transition-colors">
         提交代码
       </button>
     </div>
@@ -67,10 +67,10 @@ defineExpose({
 
 <style scoped>
 .language-option {
-  @apply p-2 rounded cursor-pointer hover:bg-gray-200 transition-colors flex items-center gap-2;
+  @apply p-2 rounded cursor-pointer hover:bg-gray-200/50 transition-colors flex items-center gap-2;
 }
 
 .language-option[aria-checked='true'] {
-  @apply bg-blue-500 text-white hover:bg-blue-600;
+  @apply bg-primary-500 text-white hover:bg-primary-600;
 }
 </style>
