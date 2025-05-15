@@ -11,14 +11,14 @@ const handleCellClick = (i: number, j: number) => {
 
 // 使用主题变量定义状态类
 const cellClasses = {
-  active: 'bg-primary-500/90 border-primary-600 shadow-active',
-  visited: 'bg-success-300/80 border-success-400',
-  default: 'bg-card border-border hover:bg-background-muted'
+  active: 'bg-primary border-primary-active  ',
+  visited: 'bg-success border-success',
+  default: 'bg-background border-border hover:bg-muted'
 }
 </script>
 
 <template>
-  <div class="axis-container">
+  <div class="axis-container bg-primary">
     <!-- 表头行 -->
     <div class="row-wrapper">
       <CalendarIcon class="axis-label text-text-muted" />
@@ -31,7 +31,7 @@ const cellClasses = {
 
     <!-- 数据行 -->
     <div v-for="(row, i) in store.state.matrix" :key="i" class="row-wrapper theme-transition">
-      <div class="axis-label text-text-muted">
+      <div class="axis-label text-muted">
         {{ i === 0 ? '空' : `物品${i}` }}
       </div>
 
@@ -42,7 +42,7 @@ const cellClasses = {
         }" @click="handleCellClick(i, j)">
           <div class="cell-content">
             <span class="value text-text">{{ cell.value }}</span>
-            <span v-if="cell.state === 'active'" class="coordinates text-on-primary text-xs">
+            <span v-if="cell.state === 'active'" class="  text-xs">
               ({{ i }},{{ j }})
             </span>
           </div>
@@ -54,7 +54,7 @@ const cellClasses = {
 
 <style scoped>
 .axis-container {
-  @apply flex flex-col p-8 bg-background-muted rounded-lg shadow-card gap-2;
+  @apply flex flex-col p-8 bg-muted rounded-lg gap-2;
 }
 
 .row-wrapper {
@@ -66,7 +66,7 @@ const cellClasses = {
 }
 
 .axis-label {
-  @apply w-14 h-14 flex items-center justify-center bg-background-muted rounded-md border-2 border-border shadow-sm theme-transition;
+  @apply w-14 h-14 flex items-center justify-center bg-muted rounded-md border-2 border-border shadow-sm theme-transition;
 }
 
 .grid-cell {
@@ -74,15 +74,11 @@ const cellClasses = {
 }
 
 .header-cell {
-  @apply bg-background-muted;
+  @apply bg-muted;
 }
 
 .cell-content {
-  @apply flex flex-col items-center justify-center gap-0.5;
-}
-
-.bg-primary-500\/90 {
-  animation: theme-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  @apply flex flex-col items-center justify-center gap-0.5 rounded-lg;
 }
 
 @keyframes theme-pulse {

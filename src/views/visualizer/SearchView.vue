@@ -9,12 +9,12 @@ const store = useSearchStore()
 </script>
 
 <template>
-  <div class="view-container">
-    <ControlPanel class="algo-card" />
-    <SearchStatus class="algo-card" />
-    <div class="visual-area">
-      <SearchCanvas />
-    </div>
+  <div class="m-1 p1">
+    <ControlPanel />
+    <hr />
+    <SearchStatus />
+    <hr />
+    <SearchCanvas class="h-full flex-center" />
   </div>
   <Modal :show="store.state.show" @close-show="store.closeShow">
     <component :is="store.state.selectedAlgorithm.doc" />

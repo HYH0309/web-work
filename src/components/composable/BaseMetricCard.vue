@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="metric-card theme-transition">
+  <div class="metric-card ">
     <component :is="metric.icon" class="metric-icon" :class="`text-${metric.color}-500`" />
     <div class="metric-content">
       <span class="metric-label text-text-muted">{{ metric.label }}:</span>
@@ -19,7 +19,7 @@ defineProps<{
 
 <style scoped>
 .metric-card {
-  @apply card-base flex items-center p-3 rounded-xl hover:bg-background-muted;
+  @apply card-base flex items-center p-3 rounded-xl theme-transition hover:bg-muted;
 }
 
 .metric-icon {

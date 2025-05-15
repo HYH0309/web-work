@@ -82,15 +82,14 @@ watch(() => store.state.stats, (newVal) => {
 
 <style scoped>
 .metrics-grid {
-  @apply grid grid-cols-2 md:grid-cols-4 gap-3;
+  @apply grid grid-cols-3 gap-3;
 }
 
 .description-box {
-  @apply p-4 bg-card rounded-lg border-border border text-text-muted;
+  @apply p-4 rounded-lg text-text theme-transition text-center card-base;
 }
 
-/* 空状态卡片扩展样式 */
 .card-base {
-  @apply bg-card rounded-lg border-border border p-4;
+  @apply bg-card rounded-lg border-border border p-4 theme-transition;
 }
 </style>

@@ -16,6 +16,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "@iconify/vue": "^5.0.0",
     "@mdit-vue/plugin-toc": "^2.1.4",
     "@mdit/plugin-katex": "^0.18.0",
     "@mdit/plugin-mathjax": "^0.18.0",

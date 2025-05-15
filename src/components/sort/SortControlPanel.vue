@@ -11,13 +11,13 @@ const store = useSortingStore()
   <BaseControlPanel direction="horizontal">
     <!-- 算法选择菜单 -->
     <Menu as="div" class="relative">
-      <MenuButton class="menu-trigger" :disabled="store.state.isSorting">
+      <MenuButton class="btn-lg btn flex items-center gap-2 bg-background text-text" :disabled="store.state.isSorting">
         {{ store.state.selectedAlgorithm?.name || '选择算法' }}
-        <ChevronDownIcon class="menu-icon" />
+        <ChevronDownIcon class="w-5 h-5 text-text/80" />
       </MenuButton>
-      <MenuItems class="dropdown-panel">
+      <MenuItems class="absolute mt-1 card-base w-full">
         <MenuItem v-for="algo in store.algorithms" :key="algo.name" v-slot="{ active }">
-        <button :class="['dropdown-item', active && 'dropdown-item-active']"
+        <button :class="['dropdown-item', active && 'bg-primary/10 text-primary']"
           @click="store.state.selectedAlgorithm = algo">
           {{ algo.name }}
         </button>
@@ -36,21 +36,21 @@ const store = useSortingStore()
 
     <!-- 操作按钮组 -->
     <template #actions>
-      <button class="control-btn primary" @click="store.startSorting" :disabled="store.state.isSorting">
+      <button class="btn-md btn bg-blue border-none" @click="store.startSorting" :disabled="store.state.isSorting">
         {{ store.state.isSorting ? (store.state.isManualMode ? '手动模式' : '排序中...') : '开始排序' }}
       </button>
-      <button class="control-btn mode-toggle" @click="store.state.isManualMode = !store.state.isManualMode"
+      <button class="btn-md btn bg-yellow border-none" @click="store.state.isManualMode = !store.state.isManualMode"
         :class="{ manual: store.state.isManualMode }" :disabled="store.state.isSorting">
         {{ store.state.isManualMode ? '手动模式' : '自动模式' }}
       </button>
-      <button class="control-btn primary" @click="store.nextStep()"
+      <button class="btn-md btn bg-blue border-none" @click="store.nextStep()"
         :disabled="!store.state.isSorting || !store.state.isManualMode">
         下一步
       </button>
-      <button class="control-btn danger" @click="store.resetArray" :disabled="store.state.isSorting">
+      <button class="btn-md btn bg-red border-none" @click="store.resetArray" :disabled="store.state.isSorting">
         重置
       </button>
-      <button class="control-btn primary" @click="store.openShow">
+      <button class="btn-md btn bg-purple border-none" @click="store.openShow">
         算法介绍
       </button>
     </template>
@@ -58,67 +58,28 @@ const store = useSortingStore()
 </template>
 
 <style scoped>
-/* 菜单触发按钮 */
-.menu-trigger {
-  @apply px-4 py-2 bg-primary text-on-primary rounded-md theme-transition hover:bg-primary-hover flex items-center gap-2;
-}
-
-.menu-icon {
-  @apply w-5 h-5 text-on-primary/80;
-}
-
-/* 下拉菜单 */
-.dropdown-panel {
-  @apply absolute z-dropdown mt-1 w-56 bg-card shadow-dropdown rounded-md border-border border theme-transition;
-}
-
 .dropdown-item {
-  @apply block w-full px-4 py-2 text-left text-sm text-text theme-transition;
-}
-
-.dropdown-item-active {
-  @apply bg-primary/10 text-primary;
+  @apply block w-full px-4 py-2 text-center text-text bg-background theme-transition;
 }
 
 /* 速度控制 */
 .speed-control {
-  @apply flex items-center gap-3 px-3 py-2 bg-panel rounded-lg border-border border theme-transition;
+  @apply panel-base flex items-center gap-3;
 }
 
 .speed-label {
-  @apply text-sm font-mono text-text-muted px-2 py-1 bg-background-muted rounded-md border-border border;
+  @apply text-sm font-mono text-muted-foreground px-2 py-1 bg-muted rounded-md border-border border;
 }
 
 .speed-slider {
-  @apply w-full h-2 bg-background-muted rounded-full accent-primary;
+  @apply w-full h-2 bg-muted rounded-full accent-primary;
 }
 
 .speed-value {
-  @apply text-sm font-mono text-text-muted px-2 py-1 bg-background-muted rounded-md border-border border;
-}
-
-/* 控制按钮 */
-.control-btn {
-  @apply px-4 py-2 rounded-md theme-transition font-medium;
-}
-
-.control-btn.primary {
-  @apply bg-primary text-on-primary hover:bg-primary-hover;
-}
-
-.control-btn.danger {
-  @apply bg-danger text-on-danger hover:bg-danger-hover;
-}
-
-.control-btn.mode-toggle {
-  @apply bg-success text-on-success hover:bg-success-hover;
-}
-
-.control-btn.mode-toggle.manual {
-  @apply bg-warning text-on-warning;
+  @apply text-sm font-mono text-muted-foreground px-2 py-1 bg-muted rounded-md border-border border;
 }
 
 button:disabled {
-  @apply bg-disabled text-text-disabled cursor-not-allowed;
+  @apply disabled:(opacity-50 cursor-not-allowed);
 }
 </style>

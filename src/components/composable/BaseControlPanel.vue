@@ -30,7 +30,7 @@ defineProps<{
 }
 
 .action-area {
-  @apply flex gap-2 items-center text-text-muted;
+  @apply flex gap-2 items-center text-muted;
 }
 
 .card-disabled {

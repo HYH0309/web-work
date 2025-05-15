@@ -6,12 +6,12 @@ const store = useSearchStore()
 
 const cellClass = (cell: string) => {
   switch (cell) {
-    case 'start': return 'start-state'
-    case 'end': return 'pivot-state'
-    case 'wall': return 'wall-state'
-    case 'visited': return 'active-state'
-    case 'path': return 'path-state'
-    default: return 'bg-card'
+    case 'start': return 'bg-green-500'
+    case 'end': return 'bg-red-500'
+    case 'wall': return 'bg-gray-500'
+    case 'visited': return 'bg-blue-500'
+    case 'path': return 'bg-yellow-500'
+    default: return 'bg-purple-500'
   }
 }
 
@@ -25,8 +25,8 @@ const handleCellClick = (row: number, col: number) => {
 </script>
 
 <template>
-  <div class="grid-container">
-    <div v-for="(row, i) in store.state.grid" :key="i" class="grid-row w-10">
+  <div class="flex flex-col gap-1 p-4">
+    <div v-for="(row, i) in store.state.grid" :key="i" class="flex gap-1">
       <motion.div v-for="(cell, j) in row" :key="`${i}-${j}-${cell}`" :class="['grid-cell', cellClass(cell)]"
         @click="handleCellClick(i, j)" :animate="{ scale: [1, 1.1, 1] }" :transition="{ duration: 0.3 }" />
     </div>
@@ -34,37 +34,7 @@ const handleCellClick = (row: number, col: number) => {
 </template>
 
 <style scoped>
-.grid-container {
-  @apply flex flex-col gap-1 p-4;
-}
-
-.grid-row {
-  @apply flex gap-1;
-}
-
 .grid-cell {
-  @apply w-10 h-10 border-border border rounded-sm cursor-pointer theme-transition;
-  box-shadow: var(--un-shadow-inset);
-}
-
-/* 状态色使用快捷方式 */
-.pivot-state {
-  @apply state-primary;
-}
-
-.active-state {
-  @apply state-primary/80;
-}
-
-.path-state {
-  @apply state-warning;
-}
-
-.start-state {
-  @apply state-success;
-}
-
-.wall-state {
-  @apply state-muted;
+  @apply w-10 h-10 border rounded-sm cursor-pointer theme-transition;
 }
 </style>

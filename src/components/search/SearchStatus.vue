@@ -57,3 +57,13 @@ watch(() => store.state.stats, (newVal) => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.metrics-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-3;
+}
+
+.description-box {
+  @apply p-4 rounded-lg text-text theme-transition text-center card-base;
+}
+</style>

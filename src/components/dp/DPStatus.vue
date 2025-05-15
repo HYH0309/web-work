@@ -80,7 +80,7 @@ watch(() => store.state.stats, (newStats) => {
 }
 
 .description-box {
-  @apply p-4 bg-card rounded-lg border-border border text-text theme-transition;
+  @apply p-4 rounded-lg text-text theme-transition text-center card-base;
 }
 
 .items-grid {
@@ -88,7 +88,7 @@ watch(() => store.state.stats, (newStats) => {
 }
 
 .item-card {
-  @apply p-1 text-center text-sm rounded hover:bg-background-muted cursor-pointer;
+  @apply p-1 text-center text-sm rounded cursor-pointer card-base;
 }
 
 .item-id {
