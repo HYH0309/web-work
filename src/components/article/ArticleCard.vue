@@ -30,14 +30,14 @@ const formatDate = (dateString: string) => {
         <div v-if="!article.coverUrl" class="absolute inset-0 animate-pulse bg-muted"></div>
       </div>
 
-      <div class="content-layout">
+      <div class=" p-4 flex flex-col gap-4">
         <div class="space-y-3">
           <h3 class="article-title text-text">
             {{ article.title }}
           </h3>
 
-          <div class="meta-info ">
-            <CalendarIcon class="w-4 h-4 text-text-muted/70" />
+          <div class="flex items-center gap-1 text-sm  text-text">
+            <CalendarIcon class="w-4 h-4" />
             <time :datetime="article.createdAt.toString()">
               {{ formatDate(article.createdAt.toString()) }}
             </time>
@@ -56,16 +56,8 @@ const formatDate = (dateString: string) => {
 </template>
 
 <style scoped>
-.content-layout {
-  @apply p-4 flex flex-col gap-4;
-}
-
 .article-title {
-  @apply text-base font-medium line-clamp-2 text-text dark:text-text/90;
-}
-
-.meta-info {
-  @apply flex items-center gap-1 text-sm text-text-muted dark:text-text-muted/80;
+  @apply text-base font-medium line-clamp-2 text-text;
 }
 
 .tag-item {

@@ -1,13 +1,46 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { md } from '@/composables/useMarked'
 import ArticleToc from '@/components/article/ArticleToc.vue'
+import ArticleTitle from '@/components/article/ArticleTitle.vue'
+import CommentInput from '@/components/article/CommentInput.vue'
+import { CommentService } from '@/api/comment'
+import { motion, useScroll, useSpring } from 'motion-v'
+
+const { scrollYProgress } = useScroll()
+const scaleX = useSpring(scrollYProgress, {
+  stiffness: 100,
+  damping: 30,
+  restDelta: 0.001,
+})
+
+
+const scrollIndicator = {
+  scaleX: scaleX,
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  height: '10px',
+  originX: 0,
+  backgroundColor: '#ff0088'
+}
 
 const articleData = reactive({
   title: '',
   content: '',
-  tocItems: [] as Array<{ id: string, title: string }>
+  tocItems: [] as Array<{ id: string, title: string }>,
+  comments: [] as string[]
 })
+
+onMounted(async () => {
+  articleData.comments = await CommentService.getComments()
+})
+
+const handleCommentSubmit = async (comment: string) => {
+  await CommentService.addComment(comment)
+  articleData.comments = await CommentService.getComments()
+}
 
 // 模拟数据初始化
 const mockData = `# Vue3 组合式API指南
@@ -71,32 +104,39 @@ articleData.content = fullHtml.slice(tocEnd)
 </script>
 
 <template>
-  <div class="article-view">
-    <h1 class="article-title">{{ articleData.title }}</h1>
-    <div class="article-grid">
+  <motion.div id="scroll-indicator" :style="scrollIndicator" class="z-100" />
+  <div class=" flex flex-col gap-6 max-w-6xl mx-auto p-4">
+    <ArticleTitle title="观众弹幕" :comments="articleData.comments" :speed="8" />
+    <div class="grid grid-cols-[auto_1fr] gap-8 min-h-[calc(100vh-200px)]">
       <ArticleToc :items="articleData.tocItems" />
-      <article class="markdown-content prose" v-html="articleData.content"></article>
+      <article class="max-w-3xl mx-auto w-full px-4 markdown-content" v-html="articleData.content"></article>
     </div>
+    <CommentInput @submit="handleCommentSubmit" />
   </div>
 </template>
 
 <style scoped>
-.article-view {
-  @apply flex flex-col gap-6 max-w-6xl mx-auto p-4;
-  background: linear-gradient(to bottom right,
-      rgba(var(--un-bg-base), 0.9),
-      rgba(var(--un-bg-card), 0.8));
-}
-
 .markdown-content :deep(h2) {
-  @apply markdown-heading;
+  @apply text-2xl font-semibold mt-12 mb-6 pb-2 border-b border-border/50;
 }
 
 .markdown-content :deep(pre) {
-  @apply markdown-code;
+  @apply rounded-lg p-4 my-4 border border-border/20 shadow-sm overflow-x-auto rounded-2xl bg-gray-1 dark:bg-gray-4;
+}
+
+.markdown-content :deep(code) {
+  @apply font-mono text-sm px-1.5 py-0.5 rounded;
+}
+
+.markdown-content :deep(pre code) {
+  @apply bg-transparent p-0;
+}
+
+.markdown-content :deep(blockquote) {
+  @apply border-l-4 border-primary/50 bg-muted/30 italic px-4 py-2 my-4 text-text/80;
 }
 
 .markdown-content :deep(.markdown-it-code-copy) {
-  @apply btn-float
+  @apply btn-ghost absolute right-2 top-2 p-2 text-sm opacity-80 hover:opacity-100;
 }
 </style>

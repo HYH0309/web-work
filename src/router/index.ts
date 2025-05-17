@@ -4,7 +4,7 @@ const routes: Array<RouteRecordRaw> = [
   //首页
   {
     path: '/',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/views/GalleryView.vue'),
   },
   //文章
   {

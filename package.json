@@ -38,6 +38,7 @@
     "highlight": "^0.2.4",
     "highlight.js": "^11.11.1",
     "i": "^0.3.7",
+    "lucide-vue-next": "^0.509.0",
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",
     "markdown-it-code-copy": "^0.2.2",
@@ -69,6 +70,7 @@
     "unplugin-vue-markdown": "^28.3.1",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vue": "^3.5.13",
+    "vue-draggable-plus": "^0.6.0",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {

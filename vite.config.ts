@@ -5,7 +5,6 @@ import UnoCSS from 'unocss/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Markdown from 'unplugin-vue-markdown/vite'
 import Components from 'unplugin-vue-components/vite'
-import MotionResolver from 'motion-v/resolver'
 import { katex } from '@mdit/plugin-katex'
 import table from 'markdown-it-multimd-table'
 import mermaidItMarkdown from 'mermaid-it-markdown' // Mermaid 图表支持
@@ -24,7 +23,6 @@ export default defineConfig({
     }),
     Components({
       dts: true,
-      resolvers: [MotionResolver()],
       dirs: ['src/components', 'src/docs'],
     }),
     Markdown({

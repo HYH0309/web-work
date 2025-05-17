@@ -28,7 +28,7 @@ const handleCellClick = (row: number, col: number) => {
   <div class="flex flex-col gap-1 p-4">
     <div v-for="(row, i) in store.state.grid" :key="i" class="flex gap-1">
       <motion.div v-for="(cell, j) in row" :key="`${i}-${j}-${cell}`" :class="['grid-cell', cellClass(cell)]"
-        @click="handleCellClick(i, j)" :animate="{ scale: [1, 1.1, 1] }" :transition="{ duration: 0.3 }" />
+        @click="handleCellClick(i, j)" :animate="{ scale: [1, 2, 1] }" :transition="{ duration: 0.3 }" />
     </div>
   </div>
 </template>

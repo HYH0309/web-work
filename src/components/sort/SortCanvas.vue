@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { motion } from 'motion-v'
 import { useSortingStore } from '@/stores/sortStore'
-
+import { motion } from 'motion-v'
 const store = useSortingStore()
 const spring = {
   type: 'spring',
-  damping: 20,  // 增加阻尼让弹跳更柔和
-  stiffness: 300, // 降低刚度使运动更流畅
-  mass: 0.5,     // 减少质量使响应更快
-  spring: 0.8
+  damping: 20,
+  stiffness: 300,
+  during: 0.1,
+  bounce: 0.5
 }
 const cellClass = (index: number) => {
   return {
@@ -44,6 +43,5 @@ const cellClass = (index: number) => {
 
 .sort-item {
   @apply w-25 min-w-1.5rem rounded-md flex items-center justify-center font-bold shadow-sm;
-  /* 自定义弹性曲线 */
 }
 </style>

@@ -44,11 +44,6 @@ const cardBase = [
 ]
 // 合并重复的布局类
 const layoutBase = ['transition-all duration-200 ease-in-out']
-const proseBase = [
-  'prose-headings:text-text',
-  'prose-p:text-text/90',
-  'prose-code:(bg-muted px-1 rounded)',
-]
 
 //导出的设置
 export default defineConfig({
@@ -61,6 +56,12 @@ export default defineConfig({
     'flex-center': 'flex items-center justify-center',
     'grid-center': 'grid place-items-center',
     'absolute-center': 'absolute inset-0 m-auto',
+
+    // 音乐播放器专用
+    'glass-container':
+      'backdrop-blur-sm bg-background/90 border-border/30 border shadow-lg w-64 rounded-xl',
+    'progress-track': 'h-1 rounded-full bg-muted/20',
+    'progress-thumb': 'h-full rounded-full bg-primary transition-all duration-300 text-xs',
 
     // ======== 基础架构 ========
     btn: [...btnBase, ...btnAfter].join(' '),
@@ -76,7 +77,7 @@ export default defineConfig({
     'btn-ghost': [
       ...btnBase,
       'border-border/80 bg-transparent',
-      'hover:(bg-muted-hover/40 border-hover)',
+      'hover:(bg-muted-hover/40 )',
       'active:bg-muted/60',
       ...btnAfter.map((s) => s.replace('bg-white/10', 'bg-foreground/10')), // 动态修改伪元素颜色
     ].join(' '),
@@ -85,7 +86,7 @@ export default defineConfig({
     'btn-sm': 'px-3 py-1.5 text-sm',
     'btn-md': 'px-4 py-2 text-base',
     'btn-lg': 'px-6 py-3 text-lg',
-    'btn-icon': 'p-2 aspect-square !rounded-full',
+    'btn-icon': 'p-1.5 aspect-square !rounded-full w-5 h-5',
     //
     // 标签按钮升级
     'tag-btn': [
@@ -123,23 +124,6 @@ export default defineConfig({
       'data-[direction=vertical]:flex-col',
     ].join(' '),
     'content-layout': 'p-4 flex flex-col gap-4',
-    // 文章标题
-    'article-title': 'text-2xl font-bold mb-4 text-text',
-
-    // 文章网格布局
-    'article-grid': 'grid grid-cols-[auto_1fr] gap-8 min-h-[calc(100vh-200px)]',
-
-    // Markdown标题
-    'markdown-heading': ['text-xl font-semibold mt-8 mb-4 pb-2', 'border-b border-border'].join(
-      ' ',
-    ),
-
-    'markdown-content': ['max-w-3xl mx-auto w-full px-4 prose', ...proseBase].join(' '),
-
-    'markdown-code': [
-      'rounded-lg shadow-background overflow-hidden my-4',
-      'bg-background font-mono text-sm',
-    ].join(' '),
     'panel-base': ['bg-muted/50 border-border/50', 'rounded-lg p-3', 'theme-transition'].join(' '),
   },
 
