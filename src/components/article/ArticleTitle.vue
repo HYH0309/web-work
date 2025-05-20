@@ -14,7 +14,10 @@ const typeitInstance = ref<TypeIt | null>(null)
 const props = defineProps<{
   title: string
   comments: string[]
+  speed?: number
 }>()
+
+import { watch } from 'vue'
 
 // 工具函数：生成区间随机数
 const getRandomInRange = (min: number, max: number) =>
@@ -43,14 +46,23 @@ const animatedComments = computed(() => {
 })
 
 // TypeIt 生命周期管理
-onMounted(() => {
-  typeitInstance.value = new TypeIt(typeitTitle.value, {
-    strings: props.title,
-    speed: 100,
-    loop: true,
-    breakLines: false
-  }).go()
-})
+const initTypeIt = () => {
+  if (typeitInstance.value) {
+    typeitInstance.value.destroy()
+  }
+  if (props.title) {
+    typeitInstance.value = new TypeIt(typeitTitle.value, {
+      strings: props.title,
+      speed: props.speed || 100,
+      loop: true,
+      breakLines: false
+    }).go()
+  }
+}
+
+onMounted(initTypeIt)
+
+watch(() => props.title, initTypeIt)
 
 onUnmounted(() => {
   typeitInstance.value?.destroy()

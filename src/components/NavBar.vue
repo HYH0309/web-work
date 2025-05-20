@@ -1,7 +1,7 @@
 <template>
   <nav class="fixed right-0 top-1/2 transform -translate-y-1/2 w-10 h-auto
               bg-muted/70 rounded-l-2xl py-5 flex flex-col gap-5
-              transition-all duration-300 hover:w-50 z-100" @mouseenter="expand" @mouseleave="collapse">
+              transition-all duration-300 hover:w-50 z-100 shadow-lg" @mouseenter="expand" @mouseleave="collapse">
     <RouterLink v-for="route in routes" :key="route.path" :to="route.path" class="nav-link"
       active-class="active bg-background/10">
       <component :is="route.icon" class=" w-6 h-6 min-w-6 mr-4" />

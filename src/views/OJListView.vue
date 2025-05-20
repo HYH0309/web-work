@@ -31,13 +31,20 @@ const filteredProblems = computed(() => {
   <div class="container mx-auto p-4 max-w-4xl">
     <OJFilterPanel v-model="searchQuery" />
 
-    <div v-if="isLoading" class="flex justify-center py-8">
-      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+    <div v-if="isLoading" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div v-for="i in 6" :key="i" class="card-base animate-pulse">
+        <div class="h-6 bg-gray-200 rounded mb-2 w-3/4"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div class="mt-4 flex justify-between">
+          <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+          <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+        </div>
+      </div>
     </div>
 
-    <div v-else class="space-y-3">
+    <div v-else class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <OJProblemCard v-for="problem in filteredProblems" :key="problem.title" :title="problem.title"
-        :difficulty="problem.difficulty" :id="1" />
+        :difficulty="problem.difficulty" :id="1" class="transition-all duration-300 hover:z-10 hover:shadow-xl" />
     </div>
   </div>
 </template>

@@ -57,12 +57,6 @@ export default defineConfig({
     'grid-center': 'grid place-items-center',
     'absolute-center': 'absolute inset-0 m-auto',
 
-    // 音乐播放器专用
-    'glass-container':
-      'backdrop-blur-sm bg-background/90 border-border/30 border shadow-lg w-64 rounded-xl',
-    'progress-track': 'h-1 rounded-full bg-muted/20',
-    'progress-thumb': 'h-full rounded-full bg-primary transition-all duration-300 text-xs',
-
     // ======== 基础架构 ========
     btn: [...btnBase, ...btnAfter].join(' '),
     // ======== 填充类型 ========

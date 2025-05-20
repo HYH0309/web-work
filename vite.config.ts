@@ -11,6 +11,17 @@ import mermaidItMarkdown from 'mermaid-it-markdown' // Mermaid 图表支持
 import hljsMarkdown from 'markdown-it-highlightjs'
 
 export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3344', // 必须包含协议头
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        // 现在请求流程：
+        // /api/articles/1 → http://localhost:3344/articles/1
+      },
+    },
+  },
   plugins: [
     vue({
       include: [/\.vue$/, /\.md$/],

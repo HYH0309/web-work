@@ -28,6 +28,25 @@ const routes: Array<RouteRecordRaw> = [
     path: '/oj/:id',
     component: () => import('@/views/OJView.vue'),
   },
+  // 管理后台
+  {
+    path: '/admin',
+    component: () => import('@/views/admin/AdminLayout.vue'),
+    children: [
+      {
+        path: 'articles',
+        component: () => import('@/views/admin/ArticleAdminView.vue'),
+      },
+      {
+        path: 'tags',
+        component: () => import('@/views/admin/TagAdminView.vue'),
+      },
+      {
+        path: 'oj',
+        component: () => import('@/views/admin/OJAdminView.vue'),
+      },
+    ],
+  },
 ]
 // 1.返回一个 router 实列，为函数，里面有配置项（对象） history
 const router = createRouter({

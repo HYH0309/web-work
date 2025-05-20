@@ -6,20 +6,24 @@ defineProps<{
 }>()
 
 const difficultyColors = {
-  easy: 'bg-emerald-100 text-emerald-800',
-  medium: 'bg-amber-100 text-amber-800',
-  hard: 'bg-rose-100 text-rose-800'
+  easy: 'bg-success/10 text-success',
+  medium: 'bg-warning/10 text-warning',
+  hard: 'bg-danger/10 text-danger'
 }
 </script>
 
 <template>
   <RouterLink :to="`/oj/${id}`" class="no-underline">
-    <div class="p-4 rounded-xl bg-white shadow-sm hover:shadow-md transition-all cursor-pointer m-10">
-      <div class="flex items-center justify-between">
-        <h3 class="text-lg font-medium text-gray-900">{{ title }}</h3>
-        <span class="px-2 py-1 text-xs rounded-full font-medium" :class="difficultyColors[difficulty]">
+    <div class="card-base cursor-pointer p-6 hover:transform-gpu hover:scale-[1.02] transition-all duration-300">
+      <div class="grid grid-cols-[1fr_auto] items-center gap-4">
+        <h3 class="text-lg font-medium text-foreground truncate">{{ title }}</h3>
+        <span class="px-3 py-1.5 text-sm rounded-full font-medium" :class="difficultyColors[difficulty]">
           {{ difficulty === 'easy' ? '简单' : difficulty === 'medium' ? '中等' : '困难' }}
         </span>
+      </div>
+      <div class="mt-4 flex justify-between items-center text-sm text-muted-foreground">
+        <span>通过率: 85%</span>
+        <span>提交数: 1.2k</span>
       </div>
     </div>
   </RouterLink>
