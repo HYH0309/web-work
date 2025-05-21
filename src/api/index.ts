@@ -54,4 +54,6 @@ export const api = {
   deleteOJProblem: (id: number) => request<null>(http.delete(`/oj/problem/${id}`)),
   postOJTestCase: (problemTests: OJTestCase[], problem_id: number) =>
     request<null>(http.post(`/oj/testcase/${problem_id}`, problemTests)),
+  getOJTestCases: (problemId: number) =>
+    request<OJTestCase[]>(http.get(`/oj/problem/${problemId}/testcases`)),
 }
