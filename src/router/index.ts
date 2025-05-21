@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
   // 管理后台
   {
     path: '/admin',
-    component: () => import('@/views/admin/AdminLayout.vue'),
+    component: () => import('@/views/AdminView.vue'),
     children: [
       {
         path: 'articles',

@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue'
 import { PlusIcon, TrashIcon, DocumentArrowUpIcon } from '@heroicons/vue/24/outline'
 import { api } from '@/api'
-import type { OJProblem, OJTestCase } from '@/types/api'
-
+import type { OJProblem, OJTestCase, Result } from '@/types/api'
+import AdminModal from '@/components/admin/AdminModal.vue'
 const ojProblems = ref<OJProblem[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
@@ -40,6 +40,7 @@ const loadProblems = async () => {
 }
 
 const createProblem = async () => {
+  errorMessage.value = ''
   if (!newProblem.value.title.trim() || !newProblem.value.content.trim()) {
     errorMessage.value = '请填写题目标题和内容'
     return
@@ -47,32 +48,44 @@ const createProblem = async () => {
 
   try {
     isLoading.value = true
-    const { status, data } = await api.postOJProblem(newProblem.value)
-    if (status && data) {
-      currentProblemId.value = data
-      showTestCaseForm.value = true
+    const result: Result = await api.postOJProblem(newProblem.value)
+    if (result.status) {
       await loadProblems()
       showProblemForm.value = false
+      newProblem.value = { id: 0, title: '', content: '' } // Reset form
+    } else {
+      errorMessage.value = '题目创建失败，请检查网络或数据格式'
     }
+  } catch {
+    errorMessage.value = '请求异常，请稍后重试'
   } finally {
     isLoading.value = false
   }
 }
 
 const createTestCases = async () => {
-  if (!currentProblemId.value || testCases.value.length === 0) {
-    errorMessage.value = '请先创建题目并添加测试用例'
+  errorMessage.value = ''
+  if (!currentProblemId.value) {
+    errorMessage.value = '请先选择题目'
+    return
+  }
+  if (testCases.value.length === 0) {
+    errorMessage.value = '请添加至少一个测试用例'
     return
   }
 
   try {
     isLoading.value = true
-    const { status } = await api.postOJTestCase(testCases.value, currentProblemId.value)
-    if (status) {
+    const result: Result = await api.postOJTestCase(testCases.value, currentProblemId.value)
+    if (result.status) {
       showTestCaseForm.value = false
       testCases.value = []
       currentProblemId.value = null
+    } else {
+      errorMessage.value = '测试用例保存失败，请检查数据格式'
     }
+  } catch {
+    errorMessage.value = '请求异常，请稍后重试'
   } finally {
     isLoading.value = false
   }
@@ -115,7 +128,11 @@ loadProblems()
             <td class="px-6 py-4 whitespace-nowrap font-mono">{{ problem.id }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ problem.title }}</td>
             <td class="px-6 py-4 whitespace-nowrap space-x-2">
-              <button @click="deleteProblem(problem.id)" class="text-red-500 hover:text-red-700">
+              <button @click="currentProblemId = problem.id; showTestCaseForm = true"
+                class="text-green-500 hover:text-green-700" title="添加测试用例">
+                <PlusIcon class="h-5 w-5" />
+              </button>
+              <button @click="deleteProblem(problem.id)" class="text-red-500 hover:text-red-700" title="删除题目">
                 <TrashIcon class="h-5 w-5" />
               </button>
             </td>
@@ -137,10 +154,10 @@ loadProblems()
       </div>
       <template #footer>
         <div class="flex justify-end space-x-4">
-          <button @click="showProblemForm = false" class="btn bg-gray-100">
+          <button @click="showProblemForm = false" class="btn bg-gray-300 hover:bg-gray-400">
             取消
           </button>
-          <button @click="createProblem" class="btn bg-blue-500 text-white">
+          <button @click="createProblem" class="btn bg-blue-500 text-white hover:bg-blue-600">
             保存
           </button>
         </div>
@@ -157,9 +174,6 @@ loadProblems()
       </div>
       <template #footer>
         <div class="flex justify-end space-x-4">
-          <button @click="showTestCaseForm = false" class="btn bg-gray-100">
-            取消
-          </button>
           <button @click="createTestCases" class="btn bg-blue-500 text-white">
             <DocumentArrowUpIcon class="h-5 w-5 mr-1" />
             批量导入

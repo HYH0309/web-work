@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, TransitionRoot, TransitionChild } from '@headlessui/vue'
-
+import { XMarkIcon } from "@heroicons/vue/24/outline";
 defineProps({
   modelValue: {
     type: Boolean,
@@ -37,18 +37,18 @@ const widthClasses = {
     <Dialog as="div" class="relative z-50" @close="emit('update:modelValue', false)">
       <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
         leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-black/25" />
+        <div class="fixed inset-0 bg-black/25"></div>
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center">
+        <div class="flex min-h-80vh items-center justify-center p-4 text-center">
           <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
             enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95">
             <DialogPanel
               :class="[widthClasses[width as keyof typeof widthClasses], 'w-full bg-white p-6 rounded-lg shadow-xl transition-all']">
               <div v-if="$slots.header" class="mb-4">
-                <slot name="header" />
+                <slot name="header"></slot>
               </div>
 
               <template v-else>
@@ -62,11 +62,11 @@ const widthClasses = {
               </template>
 
               <div class="space-y-4">
-                <slot />
+                <slot></slot>
               </div>
 
               <div v-if="$slots.footer" class="mt-6">
-                <slot name="footer" />
+                <slot name="footer"></slot>
               </div>
             </DialogPanel>
           </TransitionChild>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ArticleAdminView from './ArticleAdminView.vue'
-import TagAdminView from './TagAdminView.vue'
-import OJAdminView from './OJAdminView.vue'
+import ArticleAdminView from '@/views/admin/ArticleAdminView.vue'
+import TagAdminView from '@/views/admin/TagAdminView.vue'
+import OJAdminView from '@/views/admin/OJAdminView.vue'
 
 const tabs = [
   { name: '文章管理', component: ArticleAdminView },

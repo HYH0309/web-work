@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { PlusIcon, TrashIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 import { api } from '@/api'
 import type { Tag } from '@/types/api'
-
+import AdminModal from '@/components/admin/AdminModal.vue'
 const tags = ref<Tag[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
@@ -114,9 +114,6 @@ loadTags()
       </div>
       <template #footer>
         <div class="flex justify-end space-x-4">
-          <button @click="showTagForm = false" class="btn bg-gray-100">
-            取消
-          </button>
           <button @click="submitTag" class="btn bg-blue-500 text-white">
             {{ editingTag ? '更新' : '保存' }}
           </button>

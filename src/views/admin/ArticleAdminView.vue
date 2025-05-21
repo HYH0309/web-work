@@ -154,9 +154,6 @@ onMounted(() => {
     </div>
     <template #footer>
       <div class="flex justify-end space-x-4 mt-6">
-        <button @click="showCreateForm = false" class="btn bg-gray-100 text-gray-700">
-          取消
-        </button>
         <button @click="createArticle" class="btn bg-blue-500 text-white">
           提交
         </button>
