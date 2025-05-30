@@ -1,27 +1,15 @@
-<template>
-  <nav class="fixed right-0 top-1/2 transform -translate-y-1/2 w-10 h-auto
-              bg-muted/70 rounded-l-2xl py-5 flex flex-col gap-5
-              transition-all duration-300 hover:w-50 z-100 shadow-lg" @mouseenter="expand" @mouseleave="collapse">
-    <RouterLink v-for="route in routes" :key="route.path" :to="route.path" class="nav-link"
-      active-class="active bg-background/10">
-      <component :is="route.icon" class=" w-6 h-6 min-w-6 mr-4" />
-      <span class=" opacity-40 transition-opacity duration-200 delay-100 group-hover:opacity-100 hover:opacity-100">
-        {{ route.text }}
-      </span>
-    </RouterLink>
-  </nav>
-</template>
-
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import {
   HomeIcon,
   DocumentTextIcon,
   CodeBracketIcon,
   Squares2X2Icon
 } from '@heroicons/vue/24/outline'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+import { useMotion } from '@vueuse/motion'
 
+const $route = useRoute()
 const routes = [
   { path: '/', text: '首页', icon: HomeIcon },
   { path: '/article-list', text: '文章', icon: DocumentTextIcon },
@@ -30,18 +18,109 @@ const routes = [
 ]
 
 const isExpanded = ref(false)
+const navWidth = computed(() => isExpanded.value ? '12.5rem' : '2.5rem')
+let collapseTimer: ReturnType<typeof setTimeout>
+
+const navRef = ref<HTMLElement | null>(null)
+const navMotion = useMotion(navRef, {
+  initial: { x: 50 },
+  enter: { x: 0, transition: { type: 'spring', stiffness: 300 } }
+})
 
 const expand = () => {
+  clearTimeout(collapseTimer)
   isExpanded.value = true
 }
-
 const collapse = () => {
-  isExpanded.value = false
+  collapseTimer = setTimeout(() => {
+    isExpanded.value = false
+  }, 300)
 }
+
+onUnmounted(() => {
+  clearTimeout(collapseTimer)
+})
 </script>
 
+<template>
+  <nav ref="navRef" v-motion="navMotion" class="nav-container" :style="{ width: navWidth }" @mouseenter="expand"
+    @mouseleave="collapse">
+    <RouterLink v-for="(route, index) in routes" :key="route.path" :to="route.path" class="nav-link"
+      :class="{ 'active': $route.path === route.path }" :style="`--delay: ${index * 0.05}s`">
+      <component :is="route.icon" class="nav-icon" />
+      <span class="nav-text" :class="{ 'expanded': isExpanded }">
+        {{ route.text }}
+      </span>
+    </RouterLink>
+  </nav>
+</template>
+
+
+
 <style scoped>
+.nav-container {
+  @apply fixed right-0 top-1/2 transform -translate-y-1/2 h-auto;
+  @apply bg-muted/40 rounded-l-2xl py-6 flex flex-col gap-6 shadow-lg;
+  @apply overflow-hidden transition-all duration-300 ease-spring;
+  backdrop-filter: blur(8px);
+}
+
 .nav-link {
-  @apply flex items-center no-underline py-2 px-5 whitespace-nowrap overflow-hidden;
+  @apply flex items-center no-underline py-2 px-5 whitespace-nowrap;
+  @apply text-foreground relative transition-all duration-300 will-change-transform;
+
+  &:hover {
+    @apply bg-background/20 shadow-md;
+    transform: translateX(-2px);
+
+    .nav-icon {
+      @apply scale-125;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+    }
+
+    .nav-text {
+      @apply text-primary font-medium;
+      transform: scale(1.05);
+    }
+  }
+
+  &.active {
+    background: linear-gradient(90deg, transparent, var(--primary)/10%);
+
+    &::before {
+      content: '';
+      @apply absolute left-0 h-[70%] w-1 bg-primary rounded-r-full;
+    }
+  }
+}
+
+.nav-icon {
+  @apply w-7 h-7 min-w-7 transition-all duration-300;
+  transform-origin: center;
+
+  .nav-link.active & {
+    @apply scale-125;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
+  }
+}
+
+.nav-text {
+  @apply overflow-hidden text-ellipsis ml-4 text-lg;
+
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+
+  &.expanded {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: all 0.6s cubic-bezier(0.34, 2.2, 0.64, 1) calc(var(--delay) + 0.1s);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+  }
 }
 </style>

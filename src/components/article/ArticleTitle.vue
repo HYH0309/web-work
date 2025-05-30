@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue'
+import { ref, onMounted, computed, onUnmounted, markRaw } from 'vue'
 import TypeIt from 'typeit'
 
 // 动画配置常量
@@ -51,12 +51,14 @@ const initTypeIt = () => {
     typeitInstance.value.destroy()
   }
   if (props.title) {
-    typeitInstance.value = new TypeIt(typeitTitle.value, {
-      strings: props.title,
-      speed: props.speed || 100,
-      loop: true,
-      breakLines: false
-    }).go()
+    typeitInstance.value = markRaw(
+      new TypeIt(typeitTitle.value, {
+        strings: props.title,
+        speed: props.speed || 100,
+        loop: true,
+        breakLines: false
+      }).go()
+    )
   }
 }
 
@@ -65,7 +67,10 @@ onMounted(initTypeIt)
 watch(() => props.title, initTypeIt)
 
 onUnmounted(() => {
-  typeitInstance.value?.destroy()
+  if (typeitInstance.value?.is('started')) {
+    typeitInstance.value.destroy()
+  }
+  typeitInstance.value = null
 })
 </script>
 

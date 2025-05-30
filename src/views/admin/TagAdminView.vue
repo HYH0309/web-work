@@ -62,7 +62,9 @@ const deleteTag = async (id: number) => {
 
 const editTag = (tag: Tag) => {
   editingTag.value = tag
-  newTag.value.name = tag.name
+  newTag.value = {
+    name: tag.name
+  }
   showTagForm.value = true
 }
 
@@ -79,30 +81,50 @@ loadTags()
       </button>
     </div>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="tag in tags" :key="tag.id">
-            <td class="px-6 py-4 whitespace-nowrap font-mono">{{ tag.id }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ tag.name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap space-x-2">
-              <button @click="editTag(tag)" class="text-blue-500 hover:text-blue-700">
-                <PencilSquareIcon class="h-5 w-5" />
-              </button>
-              <button @click="deleteTag(tag.id)" class="text-red-500 hover:text-red-700">
-                <TrashIcon class="h-5 w-5" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50 sticky top-0">
+            <tr>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 w-20">ID</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 min-w-[200px]">名称</th>
+              <th class="px-4 py-3 text-right text-sm font-medium text-gray-500 w-32">操作</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <template v-if="isLoading">
+              <tr v-for="i in 3" :key="i">
+                <td class="px-6 py-4" colspan="4">
+                  <div class="h-12 bg-gray-100 animate-pulse rounded"></div>
+                </td>
+              </tr>
+            </template>
+            <template v-else>
+              <tr v-for="tag in tags" :key="tag.id" class="hover:bg-gray-50 transition-colors duration-150">
+                <td class="px-4 py-3 whitespace-nowrap font-mono text-sm">{{ tag.id }}</td>
+                <td class="px-4 py-3 whitespace-nowrap">{{ tag.name }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-right">
+                  <div class="inline-flex space-x-3">
+                    <button @click="editTag(tag)"
+                      class="p-2 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu"
+                      title="编辑">
+                      <PencilSquareIcon class="h-5 w-5" />
+                    </button>
+                    <button @click="(e: MouseEvent) => { e.preventDefault(); deleteTag(tag.id) }"
+                      class="p-2 bg-red-50 rounded-md text-red-600 hover:bg-red-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu"
+                      title="删除">
+                      <TrashIcon class="h-5 w-5" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <div v-if="!isLoading && tags.length === 0" class="text-center p-8 text-gray-500">
+          暂无标签数据
+        </div>
+      </div>
     </div>
 
     <AdminModal v-model="showTagForm" :title="editingTag ? '编辑标签' : '新建标签'" width="md" :loading="isLoading">

@@ -1,18 +1,40 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { PlusIcon, TrashIcon, DocumentArrowUpIcon, ArrowDownTrayIcon, EyeIcon } from '@heroicons/vue/24/outline'
+import { useAdminCrud } from '@/composables/useAdminCrud'
+import { PlusIcon, TrashIcon, DocumentArrowUpIcon, ArrowDownTrayIcon, EyeIcon, DocumentTextIcon } from '@heroicons/vue/24/outline'
+import { md } from '@/composables/useMarked'
+
+// 确保Marked实例已初始化
 import { api } from '@/api'
 import type { OJProblem, OJTestCase, Result } from '@/types/api'
 import AdminModal from '@/components/admin/AdminModal.vue'
-const ojProblems = ref<OJProblem[]>([])
-const isLoading = ref(false)
-const errorMessage = ref('')
-const showProblemForm = ref(false)
+const {
+  items: ojProblems,
+  isLoading,
+  errorMessage,
+  showForm: showProblemForm,
+  handleCreate: createProblem,
+  handleDelete: deleteProblem,
+  loadItems: loadProblems
+} = useAdminCrud<OJProblem>({
+  fetch: async () => {
+    const { status, data } = await api.getOJProblems()
+    return status ? data || [] : []
+  },
+  create: async (problem) => {
+    const { status } = await api.postOJProblem(problem)
+    return status ? { id: Date.now(), ...problem } : Promise.reject()
+  },
+  delete: async (id) => {
+    const { status } = await api.deleteOJProblem(id)
+    return status ? undefined : Promise.reject()
+  }
+})
+
 const showTestCaseForm = ref(false)
 const currentProblemId = ref<number | null>(null)
 
-const newProblem = ref<OJProblem>({
-  id: 0,
+const newProblem = ref<Omit<OJProblem, 'id'>>({
   title: '',
   content: ''
 })
@@ -29,39 +51,6 @@ const testCaseJson = computed({
   }
 })
 
-const loadProblems = async () => {
-  try {
-    isLoading.value = true
-    const { status, data } = await api.getOJProblems()
-    if (status && data) ojProblems.value = data
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const createProblem = async () => {
-  errorMessage.value = ''
-  if (!newProblem.value.title.trim() || !newProblem.value.content.trim()) {
-    errorMessage.value = '请填写题目标题和内容'
-    return
-  }
-
-  try {
-    isLoading.value = true
-    const result: Result = await api.postOJProblem(newProblem.value)
-    if (result.status) {
-      await loadProblems()
-      showProblemForm.value = false
-      newProblem.value = { id: 0, title: '', content: '' } // Reset form
-    } else {
-      errorMessage.value = '题目创建失败，请检查网络或数据格式'
-    }
-  } catch {
-    errorMessage.value = '请求异常，请稍后重试'
-  } finally {
-    isLoading.value = false
-  }
-}
 
 const handleFileUpload = async (event: Event) => {
   const files = Array.from((event.target as HTMLInputElement).files || []);
@@ -162,7 +151,15 @@ const downloadTestCases = async () => {
 };
 
 const showTestCaseView = ref(false)
+const showContentPreview = ref(false)
+const previewContent = ref('')
+
 const existingTestCases = ref<OJTestCase[]>([])
+
+const showProblemContent = (content: string) => {
+  previewContent.value = md.render(content)
+  showContentPreview.value = true
+}
 
 const viewTestCases = async (problemId: number) => {
   try {
@@ -177,15 +174,6 @@ const viewTestCases = async (problemId: number) => {
   }
 };
 
-const deleteProblem = async (id: number) => {
-  try {
-    isLoading.value = true
-    const { status } = await api.deleteOJProblem(id)
-    if (status) await loadProblems()
-  } finally {
-    isLoading.value = false
-  }
-}
 
 loadProblems()
 </script>
@@ -214,16 +202,28 @@ loadProblems()
             <td class="px-6 py-4 whitespace-nowrap font-mono">{{ problem.id }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ problem.title }}</td>
             <td class="px-6 py-4 whitespace-nowrap space-x-2">
-              <button @click="currentProblemId = problem.id; showTestCaseForm = true"
-                class="text-green-500 hover:text-green-700" title="添加测试用例">
-                <PlusIcon class="h-5 w-5" />
-              </button>
-              <button @click="viewTestCases(problem.id)" class="text-blue-500 hover:text-blue-700" title="查看测试用例">
-                <EyeIcon class="h-5 w-5" />
-              </button>
-              <button @click="deleteProblem(problem.id)" class="text-red-500 hover:text-red-700" title="删除题目">
-                <TrashIcon class="h-5 w-5" />
-              </button>
+              <div class="inline-flex gap-2">
+                <button @click="currentProblemId = problem.id; showTestCaseForm = true"
+                  class="p-2 bg-green-50 rounded-md text-green-600 hover:bg-green-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu"
+                  title="添加测试用例">
+                  <PlusIcon class="h-5 w-5" />
+                </button>
+                <button @click="showProblemContent(problem.content)"
+                  class="p-2 bg-purple-50 rounded-md text-purple-600 hover:bg-purple-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu"
+                  title="预览题目内容">
+                  <EyeIcon class="h-5 w-5" />
+                </button>
+                <button @click="viewTestCases(problem.id)"
+                  class="p-2 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu"
+                  title="查看测试用例">
+                  <DocumentTextIcon class="h-5 w-5" />
+                </button>
+                <button @click="(e: MouseEvent) => { e.preventDefault(); deleteProblem(problem.id) }"
+                  class="p-2 bg-red-50 rounded-md text-red-600 hover:bg-red-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu"
+                  title="删除题目">
+                  <TrashIcon class="h-5 w-5" />
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -246,11 +246,18 @@ loadProblems()
           <button @click="showProblemForm = false" class="btn bg-gray-300 hover:bg-gray-400">
             取消
           </button>
-          <button @click="createProblem" class="btn bg-blue-500 text-white hover:bg-blue-600">
+          <button @click="createProblem(newProblem)" class="btn bg-blue-500 text-white hover:bg-blue-600">
             保存
           </button>
         </div>
       </template>
+    </AdminModal>
+
+    <!-- 题目内容预览弹窗 -->
+    <AdminModal v-model="showContentPreview" title="题目内容预览" width="2xl">
+      <div class="prose max-w-none">
+        <div v-html="previewContent"></div>
+      </div>
     </AdminModal>
 
     <!-- 查看测试用例弹窗 -->
@@ -308,16 +315,20 @@ loadProblems()
               <div>
                 <label class="block mb-2 text-sm font-medium text-gray-700">
                   输入样例 #{{ index + 1 }}
+                  <span class="text-xs font-normal text-gray-500 ml-2">（支持预处理指令）</span>
                 </label>
                 <textarea v-model="testCase.input"
-                  class="textarea w-full h-32 font-mono text-sm bg-gray-50 border-gray-200" placeholder="输入内容..." />
+                  class="textarea w-full h-32 font-mono text-sm bg-gray-50 border-gray-200 focus:ring-2 focus:ring-blue-200"
+                  placeholder="#include <iostream>\nusing namespace std;\n\nint main() { ... }"></textarea>
               </div>
               <div>
                 <label class="block mb-2 text-sm font-medium text-gray-700">
                   输出样例 #{{ index + 1 }}
+                  <span class="text-xs font-normal text-gray-500 ml-2">（支持多组数据）</span>
                 </label>
                 <textarea v-model="testCase.output"
-                  class="textarea w-full h-32 font-mono text-sm bg-gray-50 border-gray-200" placeholder="输出内容..." />
+                  class="textarea w-full h-32 font-mono text-sm bg-gray-50 border-gray-200 focus:ring-2 focus:ring-blue-200"
+                  placeholder="期望输出内容..." />
               </div>
             </div>
           </div>

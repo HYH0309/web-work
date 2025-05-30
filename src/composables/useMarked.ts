@@ -65,7 +65,7 @@ const MARKDOWN_IT_CONFIG = {
   },
   CodeCopy: {
     onSuccess: () => {
-      alert('复制失败')
+      alert('复制成功')
     },
     onError: () => {
       alert('复制失败')

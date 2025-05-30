@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, onMounted, computed } from 'vue'
+import { reactive, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { md } from '@/composables/useMarked'
 import ArticleToc from '@/components/article/ArticleToc.vue'
@@ -39,12 +39,13 @@ const articleData = reactive({
   error: null as string | null
 })
 
-onMounted(async () => {
+// 提取数据加载逻辑到单独函数
+const loadArticleData = async (id: number) => {
   try {
     articleData.loading = true
     const [contentRes, commentsRes] = await Promise.all([
-      api.getArticleById(articleId.value),
-      api.getCommentsByArticleId(articleId.value)
+      api.getArticleById(id),
+      api.getCommentsByArticleId(id)
     ])
     if (!contentRes?.data) {
       throw new Error('Failed to load article data')
@@ -55,7 +56,6 @@ onMounted(async () => {
 
     // 提取标题
     articleData.title = contentRes.data.title
-    console.log(articleData)
     // 提取TOC项
     const parser = new DOMParser()
     const doc = parser.parseFromString(fullHtml, 'text/html')
@@ -74,11 +74,19 @@ onMounted(async () => {
   } finally {
     articleData.loading = false
   }
+}
+
+// 初始加载
+onMounted(() => loadArticleData(articleId.value))
+
+// 监听路由参数变化
+watch(articleId, (newId: number) => {
+  loadArticleData(newId)
 })
 
 const handleCommentSubmit = async (content: string) => {
   const comment: Comment = {
-    article_id: articleId.value,
+    articleId: articleId.value,
     content: content
   }
   try {
@@ -106,26 +114,56 @@ const handleCommentSubmit = async (content: string) => {
 
 <style scoped>
 .markdown-content :deep(h2) {
-  @apply text-2xl font-semibold mt-12 mb-6 pb-2 border-b border-border/50;
+  @apply text-xl font-bold mt-10 mb-4 pb-2 border-b border-gray-300 dark:border-gray-700;
 }
 
+/* 代码块容器 - 暗黑模式背景调淡 */
 .markdown-content :deep(pre) {
-  @apply rounded-lg p-4 my-4 border border-border/20 shadow-sm overflow-x-auto rounded-2xl bg-gray-1 dark:bg-gray-4;
+  @apply rounded-md p-4 my-4 overflow-x-auto font-mono;
+  @apply bg-[#f6f8fa] dark:bg-[#1a1f27];
+  /* 暗黑模式背景调亮 */
+  @apply border border-[#e1e4e8] dark:border-[#3b424d];
+  /* 边框颜色调整 */
+  line-height: 1.5;
 }
 
+/* 行内代码 - 增大字体，无圆角 */
 .markdown-content :deep(code) {
-  @apply font-mono text-sm px-1.5 py-0.5 rounded;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  @apply px-1.5 py-0.5;
+  @apply bg-[#f6f8fa] dark:bg-[#1a1f27] text-gray-800 dark:text-gray-200;
+  @apply border border-[#e1e4e8] dark:border-[#3b424d];
+  border-radius: 0 !important;
+  /* 确保无圆角 */
 }
 
+/* 代码块内的代码 */
 .markdown-content :deep(pre code) {
-  @apply bg-transparent p-0;
+  @apply bg-transparent p-0 border-0;
 }
 
+/* 暗黑模式文本颜色 */
+.dark .markdown-content :deep(pre code) {
+  color: #e6edf3;
+  /* 使用更亮的文本颜色提高可读性 */
+}
+
+/* 引用块 - 添加边框显示 */
 .markdown-content :deep(blockquote) {
-  @apply border-l-4 border-primary/50 bg-muted/30 italic px-4 py-2 my-4 text-text/80;
+  @apply border-l-4 border-gray-300 dark:border-gray-500;
+  @apply bg-gray-50 dark:bg-gray-800/30;
+  @apply border border-gray-200 dark:border-gray-700;
+  /* 添加完整边框 */
+  @apply px-4 py-2 my-4 text-gray-700 dark:text-gray-300;
+  @apply rounded-sm;
+  /* 轻微圆角 */
 }
 
+/* 复制按钮 */
 .markdown-content :deep(.markdown-it-code-copy) {
-  @apply btn-ghost absolute right-2 top-2 p-2 text-sm opacity-80 hover:opacity-100;
+  @apply absolute right-2 top-2 p-1 text-sm;
+  @apply text-gray-500 dark:text-gray-400 opacity-70 hover:opacity-100;
+  @apply bg-[#f6f8fa] dark:bg-[#1a1f27] border border-[#e1e4e8] dark:border-[#3b424d] rounded;
 }
 </style>

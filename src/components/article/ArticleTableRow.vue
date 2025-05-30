@@ -45,15 +45,16 @@ const { formatDate } = useFormatDate()
       {{ formatDate(article.createdAt) }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-      <button @click="isDeleteModalOpen = true" class="text-red-500 hover:text-red-700 mx-auto">
-        <TrashIcon class="h-5 w-5" />
+      <button @click="(e: MouseEvent) => { e.preventDefault(); isDeleteModalOpen = true }"
+        class="p-2 bg-purple-50 rounded-md text-red-600 hover:bg-purple-100 hover:scale-105 active:scale-95 transition-all duration-200 transform-gpu">
+        <TrashIcon class="h-5 w-5 " />
       </button>
 
       <TransitionRoot appear :show="isDeleteModalOpen" as="template">
         <Dialog as="div" @close="isDeleteModalOpen = false" class="relative z-50">
           <TransitionChild enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
             leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-            <div class="fixed inset-0 bg-black/25" />
+            <div class="fixed inset-0 bg-black/25"></div>
           </TransitionChild>
 
           <div class="fixed inset-0 overflow-y-auto">
@@ -74,7 +75,8 @@ const { formatDate } = useFormatDate()
                     <button type="button" class="btn bg-gray-100 hover:bg-gray-200" @click="isDeleteModalOpen = false">
                       取消
                     </button>
-                    <button type="button" class="btn bg-red-500 text-white hover:bg-red-600" @click="handleDelete">
+                    <button type="button" class="btn bg-red-500 text-white hover:bg-red-600"
+                      @click="(e: MouseEvent) => { e.preventDefault(); handleDelete() }">
                       确认删除
                     </button>
                   </div>
