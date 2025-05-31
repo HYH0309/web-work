@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted, markRaw } from 'vue'
+import { ref, onMounted, computed, onUnmounted, markRaw, watch } from 'vue'
 import TypeIt from 'typeit'
 
 // 动画配置常量
@@ -16,8 +16,6 @@ const props = defineProps<{
   comments: string[]
   speed?: number
 }>()
-
-import { watch } from 'vue'
 
 // 工具函数：生成区间随机数
 const getRandomInRange = (min: number, max: number) =>
@@ -63,9 +61,7 @@ const initTypeIt = () => {
 }
 
 onMounted(initTypeIt)
-
 watch(() => props.title, initTypeIt)
-
 onUnmounted(() => {
   if (typeitInstance.value?.is('started')) {
     typeitInstance.value.destroy()
@@ -75,14 +71,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative h-40 bg-gray-2 rounded-5 dark:bg-gray-6 overflow-hidden">
+  <div
+    class="relative min-h-36 md:min-h-40 bg-gradient-to-r from-sky-50 via-white to-emerald-50 dark:from-sky-950 dark:via-gray-900 dark:to-emerald-950 rounded-2xl shadow flex items-center justify-center overflow-hidden">
     <!-- 标题展示 -->
-    <h1 ref="typeitTitle" class="text-center text-4xl font-bold py-10 flex-center relative z-10" />
+    <h1 ref="typeitTitle"
+      class="text-center text-3xl md:text-4xl font-bold py-10 flex-center relative z-10 select-text" />
 
     <!-- 弹幕容器 -->
     <div v-for="(item, index) in animatedComments" :key="index"
-      class="barrage-item absolute text-sm whitespace-nowrap px-2 py-1 rounded shadow-sm backdrop-blur-sm bg-opacity-10 bg-white dark:bg-opacity-20 dark:bg-black"
-      :class="item.animation.class" :style="item.animation.style">
+      class="barrage-item absolute text-sm whitespace-nowrap px-3 py-1 rounded shadow-sm backdrop-blur-sm bg-opacity-20 bg-sky-100 dark:bg-sky-900 pointer-events-none"
+      :class="item.animation.class" :style="item.animation.style" aria-hidden="true">
       {{ item.comment }}
     </div>
   </div>
@@ -90,11 +88,15 @@ onUnmounted(() => {
 
 <style scoped>
 .barrage-item {
+  /* 动画参数用css变量控制 */
   animation: var(--duration) linear var(--delay) infinite both;
   color: hsl(var(--hue), 70%, 60%);
   top: var(--start-y);
   transform: translateY(-50%);
   will-change: transform;
+  opacity: 0.85;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .from-right {
@@ -113,7 +115,7 @@ onUnmounted(() => {
   }
 
   to {
-    transform: translateX(-100vw) translateY(-50%);
+    transform: translateX(-110vw) translateY(-50%);
   }
 }
 
@@ -123,7 +125,7 @@ onUnmounted(() => {
   }
 
   to {
-    transform: translateX(100vw) translateY(-50%);
+    transform: translateX(110vw) translateY(-50%);
   }
 }
 </style>

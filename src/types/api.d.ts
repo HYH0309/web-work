@@ -15,6 +15,7 @@ export interface ArticleSummary {
   title: string
   tags: Array<string>
   createdAt: Date
+  coverUrl?: string
 }
 
 export interface Tag {
@@ -23,7 +24,7 @@ export interface Tag {
 }
 
 export interface Comment {
-  articleId: number
+  article_id: number
   content: string
 }
 
@@ -61,8 +62,7 @@ export interface SubmitResponse {
 
 export interface JudgeResult {
   status: boolean
-  msg: 'AC' | 'WA' | 'TL' | 'CE' | 'RE' | 'RUNNING' | 'STOPPED' | 'TIMEOUT'
-  token?: string
+  msg: string
 }
 
 export interface MultiJudgeResult {

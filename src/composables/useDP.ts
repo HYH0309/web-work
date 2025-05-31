@@ -5,7 +5,7 @@ const createAlgorithmFactory = (): DPAlgorithm[] => {
   return [
     {
       name: '0-1背包问题',
-      doc: markRaw(defineAsyncComponent(() => import('docs/DP01.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/DP01.md'))),
       generator: function* (matrix: Cell[][], state: DPState) {
         // 初始化阶段
         for (let i = 0; i <= state.items.length; i++) {

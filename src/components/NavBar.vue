@@ -59,9 +59,9 @@ onUnmounted(() => {
 
 <style scoped>
 .nav-container {
-  @apply fixed right-0 top-1/2 transform -translate-y-1/2 h-auto;
+  @apply fixed right-0 top-1/3 transform -translate-y-1/2 h-auto;
   @apply bg-muted/40 rounded-l-2xl py-6 flex flex-col gap-6 shadow-lg;
-  @apply overflow-hidden transition-all duration-300 ease-spring;
+  @apply overflow-hidden transition-all duration-300;
   backdrop-filter: blur(8px);
 }
 

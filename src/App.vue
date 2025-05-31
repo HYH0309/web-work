@@ -8,5 +8,5 @@ import ThemeToggle from '@/components/ThemeToggle.vue'
   <ThemeToggle class="z-100" />
   <NavBar class="z-100" />
   <MusicPlayer class="z-100" />
-  <RouterView class="z-0" />
+  <RouterView class="z-10" />
 </template>

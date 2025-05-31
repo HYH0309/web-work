@@ -50,6 +50,23 @@ export function useAdminCrud<T extends { id: number }>(config: CrudConfig<T>) {
     }
   }
 
+  const handleUpdate = async (id: number, item: Partial<T>) => {
+    if (!config.update) {
+      errorMessage.value = '更新功能未配置'
+      return
+    }
+    try {
+      isLoading.value = true
+      await config.update(id, item)
+      await loadItems()
+      showForm.value = false
+    } catch (error) {
+      errorMessage.value = error instanceof Error ? error.message : '更新失败'
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     items,
     isLoading,
@@ -59,5 +76,6 @@ export function useAdminCrud<T extends { id: number }>(config: CrudConfig<T>) {
     loadItems,
     handleCreate,
     handleDelete,
+    handleUpdate,
   }
 }
