@@ -1,50 +1,58 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { api } from '@/api'
 import OJFilterPanel from '@/components/oj/OJFilterPanel.vue'
 import OJProblemCard from '@/components/oj/OJProblemCard.vue'
+import type { OJProblem } from '@/types/api'
 
-const isLoading = ref(false)
+const isLoading = ref(true)
 const searchQuery = ref('')
+const problems = ref<OJProblem[]>([])
 
-interface Problem {
-  title: string
-  difficulty: 'easy' | 'medium' | 'hard'
-}
-
-const problems: Problem[] = [
-  { title: '两数之和', difficulty: 'easy' },
-  { title: '无重复字符的最长子串', difficulty: 'medium' },
-  { title: '寻找两个正序数组的中位数', difficulty: 'hard' },
-  { title: '最长回文子串', difficulty: 'medium' },
-  { title: '盛最多水的容器', difficulty: 'medium' }
-]
+onMounted(async () => {
+  try {
+    const res = await api.getOJProblems()
+    if (res.status && res.data) {
+      problems.value = res.data
+    }
+  } finally {
+    isLoading.value = false
+  }
+})
 
 const filteredProblems = computed(() => {
-  return problems.filter(p =>
-    p.title.includes(searchQuery.value) ||
-    p.difficulty.includes(searchQuery.value as 'easy' | 'medium' | 'hard')
+  const query = searchQuery.value.toLowerCase()
+  return problems.value.filter(p =>
+    p.title.toLowerCase().includes(query)
   )
 })
 </script>
 
 <template>
   <div class="container mx-auto p-4 max-w-4xl">
-    <OJFilterPanel v-model="searchQuery" />
+    <OJFilterPanel v-model="searchQuery" placeholder="搜索题目名称..." />
 
-    <div v-if="isLoading" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <div v-for="i in 6" :key="i" class="card-base animate-pulse">
-        <div class="h-6 bg-gray-200 rounded mb-2 w-3/4"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-        <div class="mt-4 flex justify-between">
-          <div class="h-3 bg-gray-200 rounded w-1/3"></div>
-          <div class="h-3 bg-gray-200 rounded w-1/4"></div>
-        </div>
+    <!-- 骨架屏 -->
+    <div v-if="isLoading" class="grid gap-8 gap-y-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      <div v-for="i in 8" :key="i" class="card-base animate-pulse bg-sky-50 dark:bg-sky-900 rounded-xl shadow-sm">
+        <div class="h-8 w-8 bg-gray-200 rounded-full mb-3"></div>
+        <div class="h-6 bg-gray-200 rounded mb-2 w-4/5"></div>
+        <div class="h-4 bg-gray-200 rounded w-3/5 mb-4"></div>
+        <div class="h-3 bg-gray-200 rounded w-full"></div>
+        <div class="h-3 bg-gray-200 rounded w-2/3 mt-2"></div>
       </div>
     </div>
 
-    <div v-else class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <OJProblemCard v-for="problem in filteredProblems" :key="problem.title" :title="problem.title"
-        :difficulty="problem.difficulty" :id="1" class="transition-all duration-300 hover:z-10 hover:shadow-xl" />
+    <!-- 题目卡片 -->
+    <div v-else-if="filteredProblems.length" class="grid gap-8 gap-y-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      <OJProblemCard v-for="problem in filteredProblems" :key="problem.id" :title="problem.title" :id="problem.id"
+        class="transition-all duration-300 hover:z-10 hover:shadow-xl hover:-translate-y-1 focus-within:ring-2" />
+    </div>
+
+    <!-- 空状态 -->
+    <div v-else class="text-center py-12 text-gray-400">
+      <div class="i-ph-magnifying-glass-duotone text-4xl mb-4 mx-auto" />
+      <p>未找到匹配的题目</p>
     </div>
   </div>
 </template>

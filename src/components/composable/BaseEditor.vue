@@ -46,17 +46,19 @@ const cmRef = ref();
 
 const submitStatus = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
 
+const emit = defineEmits(['submit'])
+
 const submitCode = async () => {
   submitStatus.value = 'loading'
   try {
-    // TODO: 实现后端API调用
-    // 参数: { language: currentLanguage.value, code: code.value }
-    // 返回: Promise<{ success: boolean, result?: string }>
+    emit('submit', {
+      code: code.value,
+      language: currentLanguage.value
+    })
     submitStatus.value = 'success'
   } catch (error) {
     submitStatus.value = 'error'
     console.error('代码提交失败:', error)
-    // TODO: 可根据需要添加更完善的错误提示
   }
 }
 

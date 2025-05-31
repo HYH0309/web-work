@@ -11,7 +11,7 @@ const createAlgorithmFactory = (): SortingAlgorithm[] => {
   return [
     {
       name: '冒泡排序',
-      doc: markRaw(defineAsyncComponent(() => import('docs/bubble.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/bubble.md'))),
       generator: function* (arr: number[], stats: SortingStats) {
         const array = [...arr]
         stats.recursionDepth = 0
@@ -43,7 +43,7 @@ const createAlgorithmFactory = (): SortingAlgorithm[] => {
     },
     {
       name: '快速排序',
-      doc: markRaw(defineAsyncComponent(() => import('docs/quick.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/quick.md'))),
       generator: function* (arr: number[], stats: SortingStats) {
         const array = [...arr]
 
@@ -118,7 +118,7 @@ const createAlgorithmFactory = (): SortingAlgorithm[] => {
     },
     {
       name: '希尔排序',
-      doc: markRaw(defineAsyncComponent(() => import('docs/shell.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/shell.md'))),
       generator: function* (arr: number[], stats: SortingStats) {
         const array = [...arr]
         let gap = 1
@@ -166,7 +166,7 @@ const createAlgorithmFactory = (): SortingAlgorithm[] => {
     },
     {
       name: '插入排序',
-      doc: markRaw(defineAsyncComponent(() => import('docs/insert.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/insert.md'))),
       generator: function* (arr: number[], stats: SortingStats) {
         const array = [...arr]
 

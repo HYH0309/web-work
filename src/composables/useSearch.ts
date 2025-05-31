@@ -20,7 +20,7 @@ const createAlgorithmFactory = (): SearchAlgorithm[] => {
   return [
     {
       name: 'BFS',
-      doc: markRaw(defineAsyncComponent(() => import('docs/BFS.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/BFS.md'))),
       generator: function* (grid, stats) {
         const rows = grid.length
         const cols = grid[0].length
@@ -105,7 +105,7 @@ const createAlgorithmFactory = (): SearchAlgorithm[] => {
     },
     {
       name: 'DFS',
-      doc: markRaw(defineAsyncComponent(() => import('docs/DFS.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/DFS.md'))),
       generator: function* (grid, stats) {
         const rows = grid.length
         const cols = grid[0].length
@@ -189,7 +189,7 @@ const createAlgorithmFactory = (): SearchAlgorithm[] => {
     },
     {
       name: '双向BFS',
-      doc: markRaw(defineAsyncComponent(() => import('docs/DBFS.md'))),
+      doc: markRaw(defineAsyncComponent(() => import('docs/algorithm/DBFS.md'))),
       generator: function* (grid, stats) {
         const rows = grid.length
         const cols = grid[0].length

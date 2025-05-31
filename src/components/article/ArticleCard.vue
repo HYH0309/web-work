@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ArticleSummary } from '@/types/article';
+import type { ArticleSummary } from '@/types/api';
 import { CalendarIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{
@@ -17,36 +17,31 @@ const formatDate = (dateString: string) => {
 
 <template>
   <RouterLink :to="`/article/${article.id}`"
-    class="block no-underline theme-transition hover:-translate-y-1 active:scale-95">
-    <article class="card-base border border-border hover:-translate-y-0.5">
-      <div class="aspect-video bg-muted relative w-full h-40 rounded-md overflow-hidden">
-        <!-- 封面图 -->
+    class="block no-underline transition-all duration-200 hover:-translate-y-1 hover:shadow-xl active:scale-95 focus:ring-2 focus:ring-sky-200 rounded-xl">
+    <article class="border border-border rounded-xl bg-white dark:bg-sky-950 shadow-sm overflow-hidden">
+      <div class="aspect-video relative w-full h-40 overflow-hidden">
         <img :src="article.coverUrl || '/default-cover.webp'"
-          class="h-full w-full object-cover transition-opacity duration-300 opacity-0" :class="{
+          class="h-full w-full object-cover transition-all duration-300 opacity-0" :class="{
             'opacity-100': article.coverUrl,
-            'hover:brightness-[98%]': article.coverUrl
+            'hover:scale-105 hover:brightness-95': article.coverUrl
           }" loading="lazy" alt="文章封面" @error="(e) => (e.target as HTMLImageElement).src = '/default-cover.webp'">
-
-        <div v-if="!article.coverUrl" class="absolute inset-0 animate-pulse bg-muted"></div>
+        <div v-if="!article.coverUrl"
+          class="absolute inset-0 animate-pulse bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900 dark:to-emerald-950">
+        </div>
       </div>
-
-      <div class=" p-4 flex flex-col gap-4">
-        <div class="space-y-3">
-          <h3 class="article-title text-text">
-            {{ article.title }}
-          </h3>
-
-          <div class="flex items-center gap-1 text-sm  text-text">
+      <div class="p-5 flex flex-col gap-4">
+        <div class="space-y-2">
+          <h3 class="text-lg font-semibold line-clamp-2 text-sky-800 dark:text-sky-100">{{ article.title }}</h3>
+          <div class="flex items-center gap-1 text-xs text-gray-400">
             <CalendarIcon class="w-4 h-4" />
             <time :datetime="article.createdAt.toString()">
               {{ formatDate(article.createdAt.toString()) }}
             </time>
           </div>
         </div>
-
-        <div v-if="article.tags?.length" class="flex flex-wrap items-center gap-1">
+        <div v-if="article.tags?.length" class="flex flex-wrap items-center gap-2">
           <span v-for="(tag, i) in article.tags" :key="i"
-            class="tag-item text-success bg-success/10 hover:bg-success/20">
+            class="px-2 py-1 text-xs font-medium rounded-full bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors">
             {{ tag }}
           </span>
         </div>
