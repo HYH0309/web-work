@@ -154,4 +154,22 @@ export const api = {
 
   // 获取判题结果
   getJudgeResult: (token: string) => request<JudgeResult>(http.get(`/oj/judge?token=${token}`)),
+
+  // ===================== 文件上传相关API =====================
+  /**
+   * 上传图片
+   * @param file 图片文件
+   * @returns Promise<string> 返回图片URL
+   */
+  uploadImage: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<string>(
+      http.post('/img', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }),
+    )
+  },
 }

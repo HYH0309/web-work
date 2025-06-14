@@ -43,6 +43,22 @@
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+
+  /* Z-Index 层级管理 */
+  --z-base: 1;
+  --z-content: 5;
+  --z-route-loading: 10;
+  --z-dropdown: 15;
+  --z-tooltip: 20;
+  --z-theme-toggle: 30;
+  --z-navbar: 40;
+  --z-music-player: 50;
+  --z-modal-backdrop: 60;
+  --z-modal: 70;
+  --z-notification: 80;
+  --z-popover: 85;
+  --z-loading: 95;
+  --z-error: 100;
 }
 
 .dark {

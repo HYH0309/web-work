@@ -43,6 +43,9 @@ export const BASE_CLASSES: BaseClassConfig = {
   button: 'transition-all duration-200',
   heading: 'text-gray-900 dark:text-white',
   subtext: 'text-gray-500 dark:text-gray-400',
+  badge: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  input:
+    'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400',
 }
 
 // 标签页配置

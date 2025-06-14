@@ -4,17 +4,19 @@ import {
   HomeIcon,
   DocumentTextIcon,
   CodeBracketIcon,
-  Squares2X2Icon
+  Squares2X2Icon,
+  InformationCircleIcon
 } from '@heroicons/vue/24/outline'
 import { RouterLink, useRoute } from 'vue-router'
-import { useMotion } from '@vueuse/motion'
+
 
 const $route = useRoute()
 const routes = [
   { path: '/', text: '首页', icon: HomeIcon },
   { path: '/article-list', text: '文章', icon: DocumentTextIcon },
   { path: '/oj-list', text: 'OJ题目', icon: CodeBracketIcon },
-  { path: '/visualizer', text: '可视化', icon: Squares2X2Icon }
+  { path: '/visualizer', text: '可视化', icon: Squares2X2Icon },
+  { path: '/about', text: '关于', icon: InformationCircleIcon }
 ]
 
 const isExpanded = ref(false)
@@ -22,10 +24,7 @@ const navWidth = computed(() => isExpanded.value ? '12.5rem' : '2.5rem')
 let collapseTimer: ReturnType<typeof setTimeout>
 
 const navRef = ref<HTMLElement | null>(null)
-const navMotion = useMotion(navRef, {
-  initial: { x: 50 },
-  enter: { x: 0, transition: { type: 'spring', stiffness: 300 } }
-})
+
 
 const expand = () => {
   clearTimeout(collapseTimer)
@@ -43,7 +42,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <nav ref="navRef" v-motion="navMotion" class="nav-container" :style="{ width: navWidth }" @mouseenter="expand"
+  <nav ref="navRef" class="nav-container" :style="{ width: navWidth }" @mouseenter="expand"
     @mouseleave="collapse">
     <RouterLink v-for="(route, index) in routes" :key="route.path" :to="route.path" class="nav-link"
       :class="{ 'active': $route.path === route.path }" :style="`--delay: ${index * 0.05}s`">
@@ -63,6 +62,7 @@ onUnmounted(() => {
   @apply bg-muted/40 rounded-l-2xl py-6 flex flex-col gap-6 shadow-lg;
   @apply overflow-hidden transition-all duration-300;
   backdrop-filter: blur(8px);
+  z-index: var(--z-navbar, 40);
 }
 
 .nav-link {

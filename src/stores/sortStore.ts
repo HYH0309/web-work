@@ -29,10 +29,22 @@ export const useSortingStore = defineStore('sorting', () => {
   })
 
   let animationFrameId: number | null = null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
   let sortGenerator: Generator<SortingStep, void, SortingStep>
 
   const startSorting = () => {
     if (state.isSorting) return
+
+    // 清理之前的动画
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+
     state.isSorting = true
     state.currentStep = 0
     state.stats = { comparisons: 0, swaps: 0, recursionDepth: 0, currentGap: 0 }
@@ -44,6 +56,8 @@ export const useSortingStore = defineStore('sorting', () => {
         if (result.done) {
           state.isSorting = false
           state.activeIndices = []
+          animationFrameId = null
+          timeoutId = null
           return
         }
 
@@ -52,7 +66,9 @@ export const useSortingStore = defineStore('sorting', () => {
         if (result.value.description) {
           state.description = result.value.description
         }
-        animationFrameId = setTimeout(() => requestAnimationFrame(animate), state.speed)
+        timeoutId = setTimeout(() => {
+          animationFrameId = requestAnimationFrame(animate)
+        }, state.speed)
       }
       animationFrameId = requestAnimationFrame(animate)
     }
@@ -77,18 +93,33 @@ export const useSortingStore = defineStore('sorting', () => {
   }
 
   const resetArray = () => {
+    // 正确清理动画
     if (animationFrameId) {
-      if (typeof animationFrameId === 'number') {
-        cancelAnimationFrame(animationFrameId)
-      } else {
-        clearTimeout(animationFrameId)
-      }
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
     }
     state.isSorting = false
     state.activeIndices = []
     state.order = generateRandomArray()
     state.description = 'description'
     state.stats = { comparisons: 0, swaps: 0, recursionDepth: 0, currentGap: 0 } as SortingStats
+  }
+
+  // 添加清理所有动画的方法
+  const cleanup = () => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+    state.isSorting = false
   }
   const openShow = () => {
     state.show = true
@@ -102,6 +133,7 @@ export const useSortingStore = defineStore('sorting', () => {
     startSorting,
     resetArray,
     nextStep,
+    cleanup,
     openShow,
     closeShow,
   }

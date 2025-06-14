@@ -4,7 +4,14 @@ import SortStatus from '@/components/sort/SortStatus.vue'
 import SortCanvas from '@/components/sort/SortCanvas.vue'
 import Modal from '@/components/composable/BaseModal.vue'
 import { useSortingStore } from '@/stores/sortStore'
+import { onUnmounted } from 'vue'
+
 const store = useSortingStore()
+
+// 组件卸载时清理动画资源，防止内存泄漏
+onUnmounted(() => {
+  store.cleanup()
+})
 </script>
 
 <template>

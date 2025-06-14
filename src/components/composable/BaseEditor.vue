@@ -28,8 +28,6 @@
 import { ref } from "vue";
 import { RadioGroup, RadioGroupOption } from "@headlessui/vue";
 import Codemirror from "codemirror-editor-vue3";
-import "codemirror/mode/clike/clike";
-import "codemirror/mode/python/python";
 
 const languages = [
   { value: 'text/x-java', label: 'Java', icon: 'i-logos:java' },

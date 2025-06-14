@@ -13,8 +13,15 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import App from './App.vue'
+import { zIndexDirective, initZIndexVars } from './composables/useZIndex'
+
+// 初始化z-index CSS变量
+initZIndexVars()
 
 const app = createApp(App)
+
+// 注册全局指令
+app.directive('z-index', zIndexDirective)
 
 app.use(createPinia())
 app.use(router)

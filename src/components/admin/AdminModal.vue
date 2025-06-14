@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, TransitionRoot, TransitionChild } from '@headlessui/vue'
-import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { computed, ref, watch } from 'vue';
 
 const props = defineProps({
@@ -32,10 +31,6 @@ const props = defineProps({
   theme: {
     type: String as () => 'default' | 'blue' | 'green' | 'purple' | 'red',
     default: 'default'
-  },
-  showCloseButton: {
-    type: Boolean,
-    default: true
   }
 })
 
@@ -69,32 +64,27 @@ const themeClasses = computed(() => {
     case 'blue':
       return {
         header: 'border-blue-200 dark:border-blue-800',
-        title: 'text-blue-700 dark:text-blue-300',
-        icon: 'text-blue-400 hover:text-blue-500 dark:text-blue-300 dark:hover:text-blue-200'
+        title: 'text-blue-700 dark:text-blue-300'
       }
     case 'green':
       return {
         header: 'border-green-200 dark:border-green-800',
-        title: 'text-green-700 dark:text-green-300',
-        icon: 'text-green-400 hover:text-green-500 dark:text-green-300 dark:hover:text-green-200'
+        title: 'text-green-700 dark:text-green-300'
       }
     case 'purple':
       return {
         header: 'border-purple-200 dark:border-purple-800',
-        title: 'text-purple-700 dark:text-purple-300',
-        icon: 'text-purple-400 hover:text-purple-500 dark:text-purple-300 dark:hover:text-purple-200'
+        title: 'text-purple-700 dark:text-purple-300'
       }
     case 'red':
       return {
         header: 'border-red-200 dark:border-red-800',
-        title: 'text-red-700 dark:text-red-300',
-        icon: 'text-red-400 hover:text-red-500 dark:text-red-300 dark:hover:text-red-200'
+        title: 'text-red-700 dark:text-red-300'
       }
     default:
       return {
         header: 'border-gray-200 dark:border-gray-700',
-        title: 'text-gray-900 dark:text-white',
-        icon: 'text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200'
+        title: 'text-gray-900 dark:text-white'
       }
   }
 })
@@ -114,7 +104,7 @@ watch(() => props.modelValue, (val) => {
 
 <template>
   <TransitionRoot appear :show="modelValue" as="template">
-    <Dialog as="div" class="relative z-50" :closeOnEsc="closeOnEsc" @close="handleCloseDialog">
+    <Dialog as="div" class="relative" :style="{ zIndex: 70 }" :closeOnEsc="closeOnEsc" @close="handleCloseDialog"><!-- Modal level -->
       <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
         leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
         <div class="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm"></div>
@@ -136,35 +126,28 @@ watch(() => props.modelValue, (val) => {
 
               <template v-else>
                 <div :class="[
-                  'flex justify-between items-center p-4 sm:p-6 border-b',
+                  'flex items-center px-6 py-4 border-b',
                   themeClasses.header
                 ]">
-                  <h3 :class="['text-lg font-medium', themeClasses.title]">{{ title }}</h3>
-                  <button v-if="showCloseButton" @click="closeModal" :class="[
-                    'rounded-lg p-1 transition-colors',
-                    themeClasses.icon,
-                    loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  ]" :disabled="loading">
-                    <XMarkIcon class="h-5 w-5" />
-                  </button>
+                  <h3 :class="['text-lg font-semibold', themeClasses.title]">{{ title }}</h3>
                 </div>
               </template>
 
-              <div class="p-4 sm:p-6">
-                <div :class="{ 'opacity-50': loading }" :aria-busy="loading">
+              <div class="px-6 py-4">
+                <div :class="{ 'opacity-50 pointer-events-none': loading }" :aria-busy="loading">
                   <slot></slot>
                 </div>
 
                 <div v-if="loading"
-                  class="absolute inset-0 flex items-center justify-center bg-white/30 dark:bg-black/30 backdrop-blur-sm">
+                  class="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-sm rounded-xl">
                   <div
-                    class="h-10 w-10 rounded-full border-4 border-gray-200 dark:border-gray-600 border-t-blue-500 dark:border-t-blue-400 animate-spin">
+                    class="h-8 w-8 rounded-full border-3 border-gray-300 dark:border-gray-600 border-t-blue-500 dark:border-t-blue-400 animate-spin">
                   </div>
                 </div>
               </div>
 
               <div v-if="$slots.footer"
-                class="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6 bg-gray-50 dark:bg-gray-900">
+                class="border-t border-gray-200 dark:border-gray-700 px-6 py-4 bg-gray-50/50 dark:bg-gray-900/50">
                 <slot name="footer"></slot>
               </div>
             </DialogPanel>
