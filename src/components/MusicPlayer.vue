@@ -3,63 +3,63 @@ import { motion } from 'motion-v'
 import { usePlayerStore } from '@/stores/playerStore'
 import useAudioPlayer from '@/composables/useAudioPlayer'
 import useRotationAnimation from '@/composables/useRotationAnimation'
+import useDragProgress from '@/composables/useDragProgress'
+import useKeyboardControls from '@/composables/useKeyboardControls'
+import useButtonScale from '@/composables/useButtonScale'
 import { PlayIcon, PauseIcon } from '@heroicons/vue/24/outline'
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, onUnmounted } from 'vue'
+import { Z_INDEX } from '@/config/z-index'
 
 const { state: playerState, togglePlay } = usePlayerStore()
 const { audioRef, progress, handleSeek } = useAudioPlayer()
 const { currentRotation } = useRotationAnimation()
 
+// 进度条拖拽处理 - 使用composable
+const handleProgressChange = (value: number) => {
+  const mockEvent = {
+    target: { value: value.toString() }
+  } as Event & { target: HTMLInputElement }
+  handleSeek(mockEvent)
+}
+
+const { isDragging, startDrag } = useDragProgress(handleProgressChange)
+
+// 键盘控制 - 使用composable
+useKeyboardControls({
+  onPlay: togglePlay,
+  onSeekBackward: (amount = 5) => {
+    const newProgress = Math.max(0, progress.value - amount)
+    handleProgressChange(newProgress)
+  },
+  onSeekForward: (amount = 5) => {
+    const newProgress = Math.min(100, progress.value + amount)
+    handleProgressChange(newProgress)
+  }
+})
+
 const circleLength = computed(() => 2 * Math.PI * 45)
 const strokeDashoffset = computed(() => circleLength.value * (1 - progress.value / 100))
 
-const isDragging = ref(false)
-const dragAngle = ref(0)
+// 按钮缩放动画 - 使用composable
+const { buttonScale } = useButtonScale(() => playerState.isPlaying)
 
-// 拖动时高亮反馈
-const handleDragStart = (e: PointerEvent) => {
-  isDragging.value = true
-  const element = e.currentTarget as HTMLInputElement
-  const rect = element.getBoundingClientRect()
-  const centerX = rect.left + rect.width / 2
-  const centerY = rect.top + rect.height / 2
-
-  const handleMove = (moveEvent: PointerEvent) => {
-    if (!isDragging.value) return
-    const angle = Math.atan2(
-      moveEvent.clientY - centerY,
-      moveEvent.clientX - centerX
-    )
-    dragAngle.value = angle
-    const progressValue = ((angle + Math.PI) / (2 * Math.PI)) * 100
-    handleSeek({ target: { value: progressValue } } as unknown as Event)
-  }
-
-  const handleUp = () => {
-    isDragging.value = false
-    window.removeEventListener('pointermove', handleMove)
-    window.removeEventListener('pointerup', handleUp)
-  }
-
-  window.addEventListener('pointermove', handleMove)
-  window.addEventListener('pointerup', handleUp)
-}
-
+// 组件卸载时清理资源
 onUnmounted(() => {
   isDragging.value = false
-})
-
-// 播放/暂停按钮切换动画
-const buttonScale = ref(1)
-watch(() => playerState.isPlaying, () => {
-  buttonScale.value = 1.2
-  setTimeout(() => buttonScale.value = 1, 200)
 })
 </script>
 
 <template>
-  <div class="fixed bottom-4 left-4 z-50">
+  <div class="fixed bottom-4 left-4" :style="{ zIndex: Z_INDEX.MUSIC_PLAYER }">
     <audio ref="audioRef" hidden controls></audio>
+
+    <!-- 歌曲信息卡片 -->
+    <transition name="slide-up">
+      <div v-if="playerState.isPlaying" class="song-info mb-2">
+        <div class="text-sm font-medium text-text truncate">{{ playerState.currentSong?.name || '未知歌曲' }}</div>
+        <div class="text-xs text-text/60 truncate">{{ playerState.currentSong?.artist || '未知艺术家' }}</div>
+      </div>
+    </transition>
 
     <motion.div class="player-container" :animate="currentRotation" :class="{ 'dragging': isDragging }">
       <!-- 唱片图像 -->
@@ -94,13 +94,32 @@ watch(() => playerState.isPlaying, () => {
 
         <!-- 进度条控件（外环区域） -->
         <input type="range" class="progress-input" min="0" max="100" v-model="progress"
-          @pointerdown="handleDragStart" />
+          @pointerdown="startDrag" />
       </div>
     </motion.div>
   </div>
 </template>
 
 <style scoped>
+.song-info {
+  @apply bg-background/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-border/50 max-w-48;
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
 .player-container {
   @apply relative w-26 h-26 transition-transform;
 }

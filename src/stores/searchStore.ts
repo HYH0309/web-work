@@ -29,20 +29,34 @@ export const useSearchStore = defineStore('search', () => {
   })
 
   let animationFrameId: number | null = null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
   let searchGenerator: Generator<SearchStep, void, SearchStep>
 
   const startSearching = () => {
-    //启动前判断
+    // 启动前判断
     if (state.isSearching || !state.selectedAlgorithm) return
+
+    // 清理之前的动画
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+
     state.isSearching = true
     state.stats = { visitedNodes: 0, pathLength: 0, maxNode: 0 }
     searchGenerator = state.selectedAlgorithm.generator(state.grid, state.stats)
-    //
+
     if (!state.isManualMode) {
       const animate = () => {
         const result = searchGenerator.next()
         if (result.done) {
           state.isSearching = false
+          animationFrameId = null
+          timeoutId = null
           return
         }
 
@@ -50,7 +64,9 @@ export const useSearchStore = defineStore('search', () => {
         if (result.value.description) {
           state.description = result.value.description
         }
-        animationFrameId = setTimeout(() => requestAnimationFrame(animate), state.speed)
+        timeoutId = setTimeout(() => {
+          animationFrameId = requestAnimationFrame(animate)
+        }, state.speed)
       }
       animationFrameId = requestAnimationFrame(animate)
     }
@@ -70,13 +86,33 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
   const resetGrid = () => {
+    // 正确清理动画
     if (animationFrameId) {
-      clearTimeout(animationFrameId)
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
     }
     state.isSearching = false
+    state.currentStep = 0
     state.grid = initializeGrid(12, 15)
     state.description = 'description'
     state.stats = { visitedNodes: 0, pathLength: 0, maxNode: 0 }
+  }
+
+  // 添加清理所有动画的方法
+  const cleanup = () => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+    state.isSearching = false
   }
   const openShow = () => {
     state.show = true
@@ -89,6 +125,7 @@ export const useSearchStore = defineStore('search', () => {
     startSearching,
     nextStep,
     resetGrid,
+    cleanup,
     closeShow,
     openShow,
   }

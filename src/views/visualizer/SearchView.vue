@@ -4,8 +4,14 @@ import ControlPanel from '@/components/search/SearchControlPanel.vue'
 import SearchStatus from '@/components/search/SearchStatus.vue'
 import Modal from '@/components/composable/BaseModal.vue'
 import { useSearchStore } from '@/stores/searchStore'
-//
+import { onUnmounted } from 'vue'
+
 const store = useSearchStore()
+
+// 组件卸载时清理动画资源，防止内存泄漏
+onUnmounted(() => {
+  store.cleanup()
+})
 </script>
 
 <template>

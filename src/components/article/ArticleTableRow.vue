@@ -51,7 +51,7 @@ const { formatDate } = useFormatDate()
       </button>
 
       <TransitionRoot appear :show="isDeleteModalOpen" as="template">
-        <Dialog as="div" @close="isDeleteModalOpen = false" class="relative z-50">
+        <Dialog as="div" @close="isDeleteModalOpen = false" class="relative" :style="{ zIndex: 70 }"><!-- Modal level -->
           <TransitionChild enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
             leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
             <div class="fixed inset-0 bg-black/25"></div>

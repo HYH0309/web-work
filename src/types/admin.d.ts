@@ -38,6 +38,8 @@ export interface BaseClassConfig {
   button: string
   heading: string
   subtext: string
+  badge: string
+  input: string
 }
 
 // 颜色样式映射类型

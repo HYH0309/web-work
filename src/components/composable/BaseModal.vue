@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel } from '@headlessui/vue'
 import { motion } from 'motion-v'
+import { Z_INDEX } from '@/config/z-index'
 
 const props = defineProps({
   show: {
@@ -49,7 +50,7 @@ const dialogInitialState = {
 </script>
 
 <template>
-  <Dialog :open="show" @close="closeModal" as="div" class="relative z-100 w-screen h-screen">
+  <Dialog :open="show" @close="closeModal" as="div" class="relative w-screen h-screen" :style="{ zIndex: Z_INDEX.MODAL }">
     <!-- 背景遮罩 -->
     <motion.div :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" :exit="{ opacity: 0 }"
       class="fixed inset-0 backdrop-blur-sm bg-black/40" />

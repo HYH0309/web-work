@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// 声明id为props，确保RouterView传递的id能被接收
+defineProps<{ id: string }>()
+
 import { reactive, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { md } from '@/composables/useMarked'
@@ -101,34 +104,36 @@ const handleCommentSubmit = async (content: string) => {
 </script>
 
 <template>
-  <!-- 滚动进度条 -->
-  <motion.div id="scroll-indicator" :style="scrollIndicator" class="z-100" />
+  <div>
+    <!-- 滚动进度条 -->
+    <motion.div id="scroll-indicator" :style="scrollIndicator" class="z-100" />
 
-  <div class="flex flex-col gap-8  mx-auto p-4">
-    <!-- 文章标题 -->
-    <ArticleTitle :title="articleData.title" :comments="articleData.comments" :speed="8" />
+    <div class="flex flex-col gap-8  mx-auto p-4">
+      <!-- 文章标题 -->
+      <ArticleTitle :title="articleData.title" :comments="articleData.comments" :speed="8" />
 
-    <div class="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-8 min-h-[calc(100vh-200px)]">
-      <!-- 目录卡片（去除外层背景和圆角，避免重复） -->
-      <div class="hidden md:block">
-        <ArticleToc :items="articleData.tocItems" />
+      <div class="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-8 min-h-[calc(100vh-200px)]">
+        <!-- 目录卡片（去除外层背景和圆角，避免重复） -->
+        <div class="hidden md:block">
+          <ArticleToc :items="articleData.tocItems" />
+        </div>
+        <!-- 正文卡片 -->
+        <div v-if="articleData.loading" class="bg-sky-50 dark:bg-sky-900 rounded-xl shadow p-8 text-center text-sky-400">
+          正在加载文章内容...
+        </div>
+        <div v-else-if="articleData.error"
+          class="bg-rose-50 dark:bg-rose-900 rounded-xl shadow p-8 text-center text-rose-400">
+          {{ articleData.error }}
+        </div>
+        <article v-else class="max-w-3xl mx-auto w-full px-4 py-8  rounded-2xl shadow-lg markdown-content"
+          v-html="articleData.content"></article>
       </div>
-      <!-- 正文卡片 -->
-      <div v-if="articleData.loading" class="bg-sky-50 dark:bg-sky-900 rounded-xl shadow p-8 text-center text-sky-400">
-        正在加载文章内容...
-      </div>
-      <div v-else-if="articleData.error"
-        class="bg-rose-50 dark:bg-rose-900 rounded-xl shadow p-8 text-center text-rose-400">
-        {{ articleData.error }}
-      </div>
-      <article v-else class="max-w-3xl mx-auto w-full px-4 py-8  rounded-2xl shadow-lg markdown-content"
-        v-html="articleData.content"></article>
-    </div>
 
-    <!-- 评论区卡片 -->
-    <div class="max-w-3xl mx-auto w-full">
-      <ArticleComments :comments="articleData.comments" :loading="articleData.loading" :error="articleData.error"
-        @submit="handleCommentSubmit" />
+      <!-- 评论区卡片 -->
+      <div class="max-w-3xl mx-auto w-full">
+        <ArticleComments :comments="articleData.comments" :loading="articleData.loading" :error="articleData.error"
+          @submit="handleCommentSubmit" />
+      </div>
     </div>
   </div>
 </template>

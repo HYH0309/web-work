@@ -32,6 +32,7 @@ export interface ArticleRequest {
   title: string
   content: string
   tag_ids: number[]
+  coverUrl?: string
 }
 
 export interface OJProblem {

@@ -29,9 +29,7 @@ export default defineConfig({
         defineModel: true,
       },
     }),
-    UnoCSS({
-      mode: 'dist-chunk', // 按模块分块CSS
-    }),
+    UnoCSS(),
     Components({
       dts: true,
       dirs: ['src/components', 'src/docs'],
@@ -55,7 +53,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          katex: ['katex'],
           mermaid: ['mermaid'],
         },
       },

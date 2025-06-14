@@ -60,10 +60,22 @@ export const useDPStore = defineStore('dp', () => {
 
   // 核心逻辑
   let animationFrameId: number | null = null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
   let DPGenerator: Generator<DPStep, void, DPStep>
 
   const startDPing = () => {
     if (state.isDPing || !state.selectedAlgorithm) return
+
+    // 清理之前的动画
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+
     state.isDPing = true
     // 保持初始容量不变
     state.stats.currentStep = 0
@@ -75,6 +87,8 @@ export const useDPStore = defineStore('dp', () => {
         state.stats.currentStep++
         if (result.done) {
           state.isDPing = false
+          animationFrameId = null
+          timeoutId = null
           return
         }
         // 只更新当前活动单元格
@@ -86,7 +100,9 @@ export const useDPStore = defineStore('dp', () => {
         if (result.value.description) {
           state.description = result.value.description
         }
-        animationFrameId = setTimeout(() => requestAnimationFrame(animate), state.speed)
+        timeoutId = setTimeout(() => {
+          animationFrameId = requestAnimationFrame(animate)
+        }, state.speed)
       }
       animationFrameId = requestAnimationFrame(animate)
     }
@@ -107,8 +123,14 @@ export const useDPStore = defineStore('dp', () => {
   }
 
   const resetMatrix = () => {
+    // 正确清理动画
     if (animationFrameId) {
-      clearTimeout(animationFrameId)
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
     }
     state.isDPing = false
     state.matrix = initializeMatrix(6, 16)
@@ -117,6 +139,19 @@ export const useDPStore = defineStore('dp', () => {
     state.stats.currentStep = 0
     state.stats.maxValue = 0
     state.stats.remainingCapacity = state.stats.capacity
+  }
+
+  // 添加清理所有动画的方法
+  const cleanup = () => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+    state.isDPing = false
   }
 
   const setSpeed = (newSpeed: number) => {
@@ -133,6 +168,7 @@ export const useDPStore = defineStore('dp', () => {
     startDPing,
     nextStep,
     resetMatrix,
+    cleanup,
     setSpeed,
     openShow,
     closeShow,
