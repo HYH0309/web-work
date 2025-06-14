@@ -1,4 +1,3 @@
-
 # Vue 现代化管理系统 🚀
 
 <div align="center">
@@ -11,7 +10,7 @@
 **高性能、现代化、响应式的Vue.js管理系统**  
 **采用最新技术栈 · 精简依赖架构 · 极致开发体验**
 
-[toc]
+[🎯 核心特性](#-核心特性) • [🚀 快速开始](#-快速开始) • [📖 技术栈](#-技术栈) • [📈 性能优化](#-性能优化) • [📚 文档](#-文档)
 
 </div>
 
@@ -42,85 +41,7 @@
 
 ---
 
-## 🎵 音乐播放器：技术债交响曲
-
-### 🎛️ 控制面板：功能缺失大赏
-
-1. **单曲循环之王**  
-   - 代码里硬编码了`/music/song1.mp3`，堪称"一辈子只听一首歌"的极致用户体验
-   - 想换歌？请直接修改源码并重新部署 - 这很DevOps！
-
-2. **内存泄漏协奏曲**  
-   - 虽然写了`onUnmounted`清理定时器...  
-   - 但`timeupdate`事件监听器？让它永远在内存中歌唱吧！🎤
-
-3. **错误处理？不存在的**  
-   - 网络断了？文件404？解码失败？  
-   - 我们的应对策略：沉默是金 🤫
-
-### 🔊 音量控制：用户体验的灾难现场
-
-- 音量滑块从0直接跳到1，让用户享受"耳鸣式"音量调节
-- 没有本地存储，每次刷新都给你最大音量惊喜 - 早上提神必备！
-- 音量控制3秒自动消失...除非你手速够快！
-
-### ⏳ 进度控制：玄学操作指南
-
-- 圆形拖动很酷，但实际使用像是在解魔方
-- 拖动时CPU使用率比挖矿还高
-- 进度跳转精准度：±15秒（我们称之为"DJ风格"）
-
-### 🧠 性能"优化"亮点
-
-1. **内存占用**  
-   - 播个MP3而已，内存占用轻松突破200MB  
-   - 比Chrome开10个标签页还猛
-
-2. **CPU使用率**  
-   - 旋转动画+进度计算 = 笔记本风扇交响乐
-   - 冬天可替代暖气使用
-
-3. **电池杀手模式**  
-   - 锁屏后继续播放？想得美！  
-   - 但我们保证电量消耗速度让你来不及锁屏
-
-### 💾 数据管理黑科技
-
-- 播放进度存储：内存中（刷新即重置）
-- 播放历史：全靠用户记忆
-- 播放列表：`const playlist = ['song1.mp3']` 👑
-
-### 🚑 抢救建议（黑色幽默版）
-
-1. **代码安乐死方案**
-
-   ```bash
-   # 终极解决方案
-   rm -rf src/components/MusicPlayer*
-   ```
-
-2. **用户关怀计划**
-   - 赠送降噪耳机（应对音量突变）
-   - 附赠充电宝（应对电量消耗）
-   - 提供DJ培训（应对进度控制）
-
-3. **技术债务继承计划**
-
-   ```markdown
-   ## 新开发者入职礼包
-   - 祖传播放器代码 1 份
-   - 未解之谜清单："为什么音量控制会消失？"
-   - 前任开发者的留言："祝你好运！"
-   ```
-
-> 这个音乐播放器堪称 **前端界的死亡金属** - 又吵又耗资源，但莫名让人上头！🤘
-
-[![受害者计数器](https://img.shields.io/badge/已崩溃用户-2048人-red)](https://github.com/your-username/vue-music-disaster)  
-**警告：长时间使用可能导致电脑爆炸！**
-
----
-
-## 🚀 快速开始
+## � 快速开始
 
 ### 📋 环境要求
 
@@ -133,7 +54,7 @@ npm >= 9.0.0
 
 ```bash
 # 克隆项目
-git clone <your-repo-url>
+git clone https://github.com/HYH0309/web-work.git
 cd web-work
 
 # 安装依赖
@@ -168,4 +89,247 @@ node scripts/analyze-deps.js
 
 ---
 
-[Rest of original README content...]
+## 📖 技术栈
+
+### 🏗️ 核心框架
+
+- **[Vue 3.5.16](https://vuejs.org/)** - 组合式API、响应式系统
+- **[TypeScript 5.8.3](https://www.typescriptlang.org/)** - 类型安全、智能提示
+- **[Vite 6.3.5](https://vitejs.dev/)** - 现代构建工具、HMR
+
+### 🎨 样式方案
+
+- **[UnoCSS 66.2.0](https://unocss.dev/)** - 原子化CSS引擎
+- **[Headless UI](https://headlessui.com/)** - 无障碍组件库
+- **[Heroicons](https://heroicons.com/)** - 精美SVG图标
+
+### 📝 内容处理
+
+- **[Markdown-it 14.1.0](https://github.com/markdown-it/markdown-it)** - Markdown解析器
+- **[CodeMirror 6](https://codemirror.net/)** - 代码编辑器
+- **[Mermaid 11.6.0](https://mermaid.js.org/)** - 图表渲染
+
+### ⚡ 增强功能
+
+- **[Motion-v 1.2.1](https://motion-v.netlify.app/)** - 动画库
+- **[VueUse](https://vueuse.org/)** - Vue组合式函数
+- **[Pinia 3.0.3](https://pinia.vuejs.org/)** - 状态管理
+
+### 🧪 开发工具
+
+- **[Playwright](https://playwright.dev/)** - E2E测试
+- **[ESLint 9.28.0](https://eslint.org/)** - 代码检查
+- **[Prettier 3.5.3](https://prettier.io/)** - 代码格式化
+
+---
+
+## 📈 性能优化
+
+### 🎯 依赖优化成果
+
+```bash
+📦 包数量优化: 91 → 46 个 (-49%)
+📊 依赖体积减少: ~48.8%
+⚡ 构建时间: 19.89s
+✅ 零未使用依赖
+```
+
+### 🗑️ 已清理的依赖
+
+- ❌ 过时类型包: `@types/highlight.js`, `@types/dompurify`等
+- ❌ 未使用UI库: `@iconify/vue`, `lucide-vue-next`, `gsap`
+- ❌ 粒子系统: `@tsparticles/*`, `tsparticles-engine`
+- ❌ Monaco编辑器: `monaco-editor`, `vite-plugin-monaco-editor`
+- ❌ 冗余工具: `anchor`, `prismjs`等
+
+### 📊 构建输出分析
+
+```bash
+dist/assets/index-xPT-Vvl_.js     283.04 kB │ gzip: 101.79 kB
+dist/assets/katex-ChWnQ-fc.js     265.45 kB │ gzip:  77.50 kB
+dist/assets/mermaid-aWJvBafc.js   130.38 kB │ gzip:  43.73 kB
+dist/assets/admin-XoZ4JiOz.js     104.71 kB │ gzip:  29.69 kB
+```
+
+### 🚀 性能特性
+
+- **代码分割** - 按需加载，减少初始包体积
+- **懒加载** - 路由级别的组件懒加载
+- **资源优化** - 图片压缩、字体子集化
+- **缓存策略** - 长期缓存，版本控制
+
+---
+
+## 🏗️ 项目结构
+
+```txt
+📁 src/
+├── 📁 components/          # 组件库
+│   ├── � admin/          # 管理功能组件  
+│   ├── 📁 article/        # 文章相关组件
+│   ├── 📁 common/         # 通用组件
+│   ├── 📁 composable/     # 可复用基础组件
+│   └── 📁 [feature]/      # 其他功能组件
+├── 📁 composables/        # 组合式函数
+├── 📁 stores/             # 状态管理
+├── 📁 views/              # 页面组件
+├── 📁 types/              # TypeScript类型
+├── 📁 utils/              # 工具函数
+└── 📁 router/             # 路由配置
+
+📁 docs/                   # 项目文档
+├── 📄 Vue依赖清理最终完成报告.md
+├── 📄 依赖优化完成报告.md
+├── 📄 无障碍性优化报告.md
+└── 📄 项目最终总结报告.md
+
+📁 scripts/               # 自动化脚本
+├── 📄 analyze-deps.js    # 依赖分析工具
+└── 📄 deps-cleanup.js    # 依赖清理工具
+```
+
+---
+
+## ⌨️ 快捷键支持
+
+| 快捷键 | 功能描述 |
+|--------|----------|
+| `Ctrl + /` | 显示/隐藏帮助面板 |
+| `Ctrl + 1-3` | 切换管理模块 |
+| `Ctrl + E` | 导出数据 |
+| `Ctrl + R` | 刷新数据 |
+| `Ctrl + M` | 切换监控模式 |
+| `Tab/Shift+Tab` | 键盘导航 |
+| `Enter/Space` | 激活选中项 |
+
+---
+
+## 🔧 开发工具
+
+### 📊 依赖分析
+
+```bash
+# 分析项目依赖使用情况
+node scripts/analyze-deps.js
+
+# 检测未使用依赖
+npx depcheck
+
+# 清理过时类型包
+node scripts/deps-cleanup.js
+```
+
+### 🧪 代码质量
+
+```bash
+# 代码检查
+npm run lint
+
+# 格式化代码
+npm run format
+
+# 类型检查
+npm run type-check
+```
+
+### 🎯 性能监控
+
+```bash
+# 构建分析
+npm run build
+
+# 包大小分析
+npx vite-bundle-analyzer
+```
+
+---
+
+## 🌐 浏览器兼容性
+
+| 浏览器 | 最低版本 | 状态 |
+|--------|----------|------|
+| Chrome | >= 90 | ✅ 完全支持 |
+| Firefox | >= 88 | ✅ 完全支持 |
+| Safari | >= 14 | ✅ 完全支持 |
+| Edge | >= 90 | ✅ 完全支持 |
+
+---
+
+## � 文档
+
+### 📖 核心文档
+
+- **[依赖优化报告](./docs/Vue依赖清理最终完成报告.md)** - 详细的依赖清理过程和成果
+- **[无障碍性优化](./docs/无障碍性优化报告.md)** - WCAG 2.1 AA合规性实现
+- **[项目总结报告](./docs/项目最终总结报告.md)** - 完整的技术架构和实现细节
+
+### 🛠️ 开发指南
+
+- **组件开发** - 遵循组合式API和TypeScript最佳实践
+- **状态管理** - 使用Pinia进行响应式状态管理
+- **样式规范** - UnoCSS原子化类名规范
+- **测试策略** - E2E测试覆盖关键用户流程
+
+---
+
+## � 音乐播放器
+
+> **开发者的小声嘀咕**: 这个播放器可能不是最完美的，但它是用❤️制作的（以及大量的咖啡因）
+
+### 🎛️ 特性
+
+- **单曲循环** - 因为有时候一首好歌值得重复听
+- **音量控制** - 从图书馆到音乐节的完整体验
+- **进度控制** - 圆形拖动，因为我们喜欢不走寻常路
+- **动画效果** - 让你的CPU也能感受到音乐的节拍
+
+### 🔧 技术实现
+
+- **HTML5 Audio API** - 现代浏览器的原生支持
+- **Vue组合式函数** - 响应式音频控制
+- **CSS动画** - 流畅的视觉反馈
+- **TypeScript** - 类型安全的音频处理
+
+#### 注: 如遇到播放问题，请检查音频文件路径或联系开发者（准备好降压药）
+
+---
+
+## 🤝 贡献指南
+
+### 📋 开发流程
+
+1. Fork项目并创建特性分支
+2. 遵循代码规范和类型检查
+3. 编写测试用例确保功能正确
+4. 提交PR并通过CI检查
+
+### 🎯 代码规范
+
+- 使用TypeScript进行类型安全开发
+- 遵循ESLint和Prettier配置
+- 组件采用组合式API和`<script setup>`语法
+- 提交信息遵循Conventional Commits规范
+
+---
+
+## � 许可证
+
+本项目采用 [MIT License](LICENSE) 开源协议。
+
+---
+
+## 🙏 致谢
+
+- Vue.js团队提供的优秀框架
+- 社区贡献的开源组件和工具
+- 所有参与项目开发和测试的贡献者
+- 还有那些耐心测试音乐播放器的勇士们 🎖️
+
+---
+
+<div align="center">
+
+### ⭐ 如果这个项目对你有帮助，请给个Star！ ⭐
+
+Made with ❤️ and lots of ☕ by Vue Community
+
