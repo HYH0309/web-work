@@ -1,4 +1,4 @@
-# Vue 现代化管理系统 🚀
+# Vue 的在线可视化学习平台 🚀
 
 <div align="center">
 
